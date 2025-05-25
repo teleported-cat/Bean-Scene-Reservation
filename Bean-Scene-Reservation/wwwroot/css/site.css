@@ -72,3 +72,23 @@ h3, h4, h5, h6 {
 a {
     color: var(--LightBlue);
 }
+
+/* Classes */
+.header-title {
+    background-color: var(--DarkBlue);
+}
+
+.header-title a img {
+    width: 300px;
+}
+
+@media not (min-width: 300px) {
+    .header-title a img {
+        width: 100%;
+    }
+}
+
+.nav-link, .dropdown-item {
+    color: var(--DarkBlue) !important;
+    white-space: nowrap;
+}
