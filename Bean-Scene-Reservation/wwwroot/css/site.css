@@ -36,3 +36,39 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* Bean Scene Fonts */
+body { /* Body Text */
+    font-family: "Open Sans", Arial, sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings: 
+        "wdth" 100;
+    color: var(--DarkBlue);
+}
+
+h1 {
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    color: var(--LightBlue);
+}
+
+h2 {
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    color: var(--DarkBlue);
+}
+
+h3, h4, h5, h6 {
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    color: var(--MidBlue);
+}
+
+a {
+    color: var(--LightBlue);
+}
