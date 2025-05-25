@@ -87,9 +87,43 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; @(DateTime.Today.Year) - @companyName - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="border-top footer">
+        <div class="container text-center">
+            <div class="row pt-1">
+                <div class="col">
+                    <strong>Contact Us!</strong>
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col">
+                    <i class="bi bi-telephone"></i> 
+                    0200 000 000
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col text-break">
+                    <a href="mailto:reservations@beanscene.com.au">
+                        <i class="bi bi-envelope"></i>
+                        reservations@beanscene.com.au
+                    </a>
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col">
+                    <i class="bi bi-building"></i>
+                    205 Peats Ferry Rd, Hornsby NSW 2077
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col">
+                    <hr/>
+                </div>
+            </div>
+            <div class="row pt-1">
+                <div class="col">
+                    <em>&copy; @(DateTime.Today.Year) - @companyName</em>
+                </div>
+            </div>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
