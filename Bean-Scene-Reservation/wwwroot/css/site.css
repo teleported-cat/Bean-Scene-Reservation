@@ -1,17 +1,17 @@
 /* Bean Scene Colours */
 :root {
     /* Primary Colours */
-        --DarkBlue: #083944; /* For H2 and Body Text */
+    --DarkBlue: #083944; /* For H2 and Body Text */
     --DarkBlueOp: rgba(8, 57, 68, 0.5);
-        --MidBlue: #2F6672; /* For H3 and further headings */
-        --LightBlue: #4AA1B5; /* For H1 and hyperlinks/buttons */
-        --White: #FFFFFF;
+    --MidBlue: #2F6672; /* For H3 and further headings */
+    --LightBlue: #4AA1B5; /* For H1 and hyperlinks/buttons */
+    --White: #FFFFFF;
     /* Secondary Colours (Use Sparingly) */
-        /* DarkGold & Gold can be used as backup colours for hyperlinks */
-        --DarkGold: #CC9E09;
-        --Gold: #EBC136;
-        --PaleGold: #F8E8B5;
-        --LightGrey: #E0E0E0;
+    /* DarkGold & Gold can be used as backup colours for hyperlinks */
+    --DarkGold: #CC9E09;
+    --Gold: #EBC136;
+    --PaleGold: #F8E8B5;
+    --LightGrey: #E0E0E0;
 }
 
 /* Element Styling */
@@ -50,6 +50,7 @@ body { /* Body Text */
 }
 
 h1 {
+    font-family: "Tangerine", cursive;
     font-optical-sizing: auto;
     font-weight: 300;
     font-style: normal;
