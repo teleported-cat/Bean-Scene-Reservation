@@ -111,6 +111,10 @@ a {
     color: var(--White);
 }
 
+.home--card {
+    width: 300px;
+}
+
 .home--card__img {
     height: 150px;
     object-fit: cover;
