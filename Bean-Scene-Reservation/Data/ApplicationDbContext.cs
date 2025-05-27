@@ -21,7 +21,7 @@ namespace Bean_Scene_Reservation.Data
 
             // Seed Data for Entities
             // Seeded data is automatically inserted into the database on creation
-            /*
+            
             builder.Entity<Area>().HasData
             (
                 new Area { Id = 1, Name = "Main"},
@@ -64,7 +64,7 @@ namespace Bean_Scene_Reservation.Data
                 new Table { TableNumber = "B9", AreaId = 3 },
                 new Table { TableNumber = "B10", AreaId = 3 }
             );
-            */
+            
             // Pass customisations through to base DbContext
             base.OnModelCreating(builder);
         }
