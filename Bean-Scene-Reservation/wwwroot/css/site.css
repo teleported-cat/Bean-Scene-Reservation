@@ -95,6 +95,10 @@ a {
     white-space: nowrap;
 }
 
+.carousel-item img {
+    object-fit: cover;
+}
+
 .carousel-caption {
     background-color: var(--DarkBlueOp);
     color: var(--White);
