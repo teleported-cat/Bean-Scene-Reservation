@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bean_Scene_Reservation.Models
 {
+    [Index(nameof(Name), IsUnique = true)]
     public class Area
     {
         [Key]
@@ -12,7 +14,7 @@ namespace Bean_Scene_Reservation.Models
 
 
         // Navigation properities back to the list of associated tables
-        public ICollection<Table>? Tables { get; set; }
+        public ICollection<Table>? Tables { get; set; } = null;
 
         // Constructors 
         public Area()
