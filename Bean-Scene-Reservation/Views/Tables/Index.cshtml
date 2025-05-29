@@ -1,43 +1,50 @@
 ﻿@model IEnumerable<Bean_Scene_Reservation.Models.Table>
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Manage Tables";
 }
 
-<!DOCTYPE html>
+<h1 class="open-sans">@ViewData["Title"]</h1>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary" aria-label="Add Table" title="Add Table">
+        <i class="bi-plus-circle"></i>
+        Add Table
+    </a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Area)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Area.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.TableNumber">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TableNumber">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.TableNumber">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
-</body>
-</html>
+
+<div class="table-responsive">
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.TableNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Area)
+                </th>
+                <th aria-label="Actions: Edit, Delete"></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TableNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Area.Name)
+                </td>
+                <td class="text-end">
+                    <a class="btn btn-secondary" aria-label="Edit" title="Edit" asp-action="Edit" asp-route-id="@item.TableNumber">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <a class="btn btn-danger" aria-label="Delete" title="Delete" asp-action="Delete" asp-route-id="@item.TableNumber">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+</div>
