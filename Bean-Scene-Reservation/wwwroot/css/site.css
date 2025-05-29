@@ -119,3 +119,8 @@ a {
     height: 150px;
     object-fit: cover;
 }
+
+.open-sans {
+    font-family: "Open Sans", Arial, sans-serif;
+    font-weight: 400;
+}
