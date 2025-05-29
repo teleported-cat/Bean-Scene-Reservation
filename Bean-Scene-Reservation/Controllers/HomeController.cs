@@ -23,6 +23,11 @@ namespace Bean_Scene_Reservation.Controllers
             return View();
         }
 
+        public IActionResult ManagerPortal()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
