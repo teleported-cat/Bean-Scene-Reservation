@@ -65,7 +65,27 @@ namespace Bean_Scene_Reservation.Data
                 new Table { TableNumber = "B9", AreaId = 3 },
                 new Table { TableNumber = "B10", AreaId = 3 }
             );
-            
+
+            /* 
+             * Seeding data for timeslots
+             */
+            //// We are going to create the timeslots through code
+            //// List to all timeslots
+            var timeslotsToAdd = new List<Timeslot>();
+
+            //// Earliest time is 0800, latest is 2200
+            var startTime = new TimeOnly(8, 0);
+            var endTime = new TimeOnly(22, 0);
+
+            //// Loop through all possible 30-minute increments in range of the start and end times
+            for (int minutes = 0; startTime.AddMinutes(minutes) <= endTime; minutes += 30)
+            {
+                timeslotsToAdd.Add(new Timeslot { Time = startTime.AddMinutes(minutes) });
+            }
+
+            //// Add list to EF collection
+            builder.Entity<Timeslot>().HasData(timeslotsToAdd);
+
             // Pass customisations through to base DbContext
             base.OnModelCreating(builder);
         }

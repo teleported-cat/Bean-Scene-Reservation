@@ -4,6 +4,7 @@ using Bean_Scene_Reservation.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bean_Scene_Reservation.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250529132223_AddTimeslotModel")]
+    partial class AddTimeslotModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,124 +239,6 @@ namespace Bean_Scene_Reservation.Data.Migrations
                     b.HasKey("Time");
 
                     b.ToTable("Timeslots");
-
-                    b.HasData(
-                        new
-                        {
-                            Time = new TimeOnly(8, 0, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(8, 30, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(9, 0, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(9, 30, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(10, 0, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(10, 30, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(11, 0, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(11, 30, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(12, 0, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(12, 30, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(13, 0, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(13, 30, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(14, 0, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(14, 30, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(15, 0, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(15, 30, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(16, 0, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(16, 30, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(17, 0, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(17, 30, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(18, 0, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(18, 30, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(19, 0, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(19, 30, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(20, 0, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(20, 30, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(21, 0, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(21, 30, 0)
-                        },
-                        new
-                        {
-                            Time = new TimeOnly(22, 0, 0)
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
