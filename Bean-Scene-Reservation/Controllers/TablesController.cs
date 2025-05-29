@@ -22,27 +22,8 @@ namespace Bean_Scene_Reservation.Controllers
         // GET: Tables
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Tables.Include(t => t.Area);
+            var applicationDbContext = _context.Tables.Include(t => t.Area).OrderBy(t => t.AreaId);
             return View(await applicationDbContext.ToListAsync());
-        }
-
-        // GET: Tables/Details/5
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var table = await _context.Tables
-                .Include(t => t.Area)
-                .FirstOrDefaultAsync(m => m.TableNumber == id);
-            if (table == null)
-            {
-                return NotFound();
-            }
-
-            return View(table);
         }
 
         // GET: Tables/Create
@@ -65,11 +46,11 @@ namespace Bean_Scene_Reservation.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AreaId"] = new SelectList(_context.Areas, "Id", "Name", table.AreaId);
+            ViewData["AreaId"] = new SelectList(_context.Areas.OrderBy(a => a.Id), "Id", "Name", table.AreaId);
             return View(table);
         }
 
-        // GET: Tables/Edit/5
+        // GET: Tables/Edit/M1
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -86,7 +67,7 @@ namespace Bean_Scene_Reservation.Controllers
             return View(table);
         }
 
-        // POST: Tables/Edit/5
+        // POST: Tables/Edit/M1
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -122,7 +103,7 @@ namespace Bean_Scene_Reservation.Controllers
             return View(table);
         }
 
-        // GET: Tables/Delete/5
+        // GET: Tables/Delete/M1
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -141,7 +122,7 @@ namespace Bean_Scene_Reservation.Controllers
             return View(table);
         }
 
-        // POST: Tables/Delete/5
+        // POST: Tables/Delete/M1
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
