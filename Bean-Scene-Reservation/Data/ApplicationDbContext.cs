@@ -24,6 +24,7 @@ namespace Bean_Scene_Reservation.Data
             // Seed Data for Entities
             // Seeded data is automatically inserted into the database on creation
             
+            // Seed Data for Area
             builder.Entity<Area>().HasData
             (
                 new Area { Id = 1, Name = "Main"},
@@ -31,6 +32,7 @@ namespace Bean_Scene_Reservation.Data
                 new Area { Id = 3, Name = "Balcony" }
             );
 
+            // Seed Data for Table
             builder.Entity<Table>().HasData
             (
                 new Table { TableNumber = "M1", AreaId = 1 },
@@ -86,6 +88,14 @@ namespace Bean_Scene_Reservation.Data
 
             //// Add list to EF collection
             builder.Entity<Timeslot>().HasData(timeslotsToAdd);
+
+            // Seed Data for SittingType
+            builder.Entity<SittingType>().HasData
+            (
+                new SittingType { Id = 1, Name = "Breakfast" },
+                new SittingType { Id = 2, Name = "Lunch" },
+                new SittingType { Id = 3, Name = "Dinner" }
+            );
 
             // Pass customisations through to base DbContext
             base.OnModelCreating(builder);

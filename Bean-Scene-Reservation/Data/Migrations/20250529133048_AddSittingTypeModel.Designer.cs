@@ -4,6 +4,7 @@ using Bean_Scene_Reservation.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bean_Scene_Reservation.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250529133048_AddSittingTypeModel")]
+    partial class AddSittingTypeModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,23 +82,6 @@ namespace Bean_Scene_Reservation.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("SittingTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Breakfast"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Lunch"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Dinner"
-                        });
                 });
 
             modelBuilder.Entity("Bean_Scene_Reservation.Models.Table", b =>
