@@ -10,6 +10,7 @@ namespace Bean_Scene_Reservation.Data
         public DbSet<Area> Areas { get; set; }
         public DbSet<Table> Tables { get; set; }
         public DbSet<Timeslot> Timeslots { get; set; }
+        public DbSet<SittingType> SittingTypes { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
