@@ -8,7 +8,7 @@ namespace Bean_Scene_Reservation.Models
     {
         [Key]
         [StringLength(3, MinimumLength = 2)]
-        [RegularExpression(@"^[A-Z]{1,2}\d{1,3}$", ErrorMessage = "Must follow the pattern XX000, e.g. M1, AB001")]
+        [RegularExpression(@"^[A-Z]\d{1,2}$", ErrorMessage = "Must follow the X00 pattern! e.g. M1 or B10")]
         [DisplayName("Table Number")]
         public string TableNumber { get; set; }
 
