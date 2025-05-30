@@ -9,7 +9,7 @@ namespace Bean_Scene_Reservation.Models
     {
         [Required]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:h MMM yyyy}")]
+        [DisplayFormat(DataFormatString = "{0:d MMM yyyy}")]
         public DateOnly Date { get; set; }
 
         [Required]
@@ -33,8 +33,8 @@ namespace Bean_Scene_Reservation.Models
 
         public enum SittingStatus
         {
-            Available = 1,
-            Unavailable = 2,
+            Open = 1,
+            Closed = 2,
         }
 
         [Required]
