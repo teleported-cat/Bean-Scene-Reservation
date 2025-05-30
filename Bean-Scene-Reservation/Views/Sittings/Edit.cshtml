@@ -1,26 +1,25 @@
 ﻿@model Bean_Scene_Reservation.Models.Sitting
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Edit Sitting for " + Model.Date;
 }
 
-<!DOCTYPE html>
+<h1 class="open-sans">@ViewData["Title"]</h1>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Edit</title>
-</head>
-<body>
-
-<h4>Sitting</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Date" />
-            <input type="hidden" asp-for="SittingTypeId" />
+            <div class="form-group">
+                <label asp-for="Date" class="control-label"></label>
+                <input asp-for="Date" class="form-control" disabled />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SittingTypeId" class="control-label"></label>
+                <select asp-for="SittingTypeId" class="form-control" asp-items="ViewBag.SittingTypeId" disabled></select>
+            </div>
             <div class="form-group">
                 <label asp-for="StartTimeId" class="control-label"></label>
                 <select asp-for="StartTimeId" class="form-control" asp-items="ViewBag.StartTimeId"></select>
@@ -32,28 +31,23 @@
                 <span asp-validation-for="EndTimeId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control"></select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Capacity" class="control-label"></label>
                 <input asp-for="Capacity" class="form-control" />
                 <span asp-validation-for="Capacity" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" class="form-control" asp-items="@Html.GetEnumSelectList<Sitting.SittingStatus>()"></select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group border-top mt-4 pt-4">
+                <input type="submit" value="Save" class="btn btn-primary" aria-label="Save" />
+                <a asp-action="Index" class="btn btn-secondary" aria-label="Cancel">Cancel</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-</body>
-</html>
