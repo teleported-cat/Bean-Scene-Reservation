@@ -124,3 +124,27 @@ a {
     font-family: "Open Sans", Arial, sans-serif;
     font-weight: 400;
 }
+
+.status-closed {
+    color: var(--bs-danger);
+}
+
+.status-open {
+    color: var(--bs-success);
+}
+
+:is(.status-open, .status-closed)::before {
+    display: inline-block;
+    font-family: bootstrap-icons !important;
+    font-weight: 400 !important;
+    line-height: 1;
+    vertical-align: -.125em;
+}
+
+.status-closed::before {
+    content: '\f622';
+}
+
+.status-open::before {
+    content: '\f26a';
+}
