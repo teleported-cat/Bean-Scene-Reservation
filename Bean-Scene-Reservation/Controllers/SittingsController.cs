@@ -112,6 +112,8 @@ namespace Bean_Scene_Reservation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(DateOnly? date, int type, [Bind("Date,SittingTypeId,StartTimeId,EndTimeId,Status,Capacity")] Sitting sitting)
         {
+            sitting.SittingTypeId = type;
+
             if (date != sitting.Date)
             {
                 return NotFound();
