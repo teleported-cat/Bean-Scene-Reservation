@@ -93,7 +93,12 @@ namespace Bean_Scene_Reservation.Controllers
                 return NotFound();
             }
 
-            var sitting = await _context.Sittings.FindAsync(date, type);
+            //var sitting = await _context.Sittings.FindAsync(date, type);
+            var sitting = await _context.Sittings
+                .Include(s => s.EndTime)
+                .Include(s => s.SittingType)
+                .Include(s => s.StartTime)
+                .FirstOrDefaultAsync(s => s.Date == date && s.SittingTypeId == type);
             if (sitting == null)
             {
                 return NotFound();
@@ -150,6 +155,7 @@ namespace Bean_Scene_Reservation.Controllers
         [HttpGet("Sittings/Delete/{date}/{type}")]
         public async Task<IActionResult> Delete(DateOnly? date, int type)
         {
+
             if (date == null)
             {
                 return NotFound();

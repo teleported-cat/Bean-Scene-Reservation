@@ -1,7 +1,8 @@
 ﻿@model Bean_Scene_Reservation.Models.Sitting
 
 @{
-    ViewData["Title"] = "Edit Sitting for " + Model.Date;
+    string sittingType = Model.SittingType.Name;
+    ViewData["Title"] = "Edit Sitting for " + Model.Date + " " + sittingType;
 }
 
 <h1 class="open-sans">@ViewData["Title"]</h1>
