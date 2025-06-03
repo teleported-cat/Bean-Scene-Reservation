@@ -175,7 +175,7 @@ namespace Bean_Scene_Reservation.Controllers
         }
 
         // POST: Sittings/Delete/2000-01-01/1
-        [HttpPost("Sittings/Delete/{date}/{id}"), ActionName("Delete")]
+        [HttpPost("Sittings/Delete/{date}/{type}"), ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(DateOnly date, int type)
         {
