@@ -45,25 +45,31 @@ namespace Bean_Scene_Reservation.Models
         public int SittingTypeId { get; set; }
 
         [Required]
-        [DisplayName("")]
+        [DisplayName("Monday")]
         public bool ForMonday { get; set; }
 
         [Required]
+        [DisplayName("Tuesday")]
         public bool ForTuesday { get; set; }
 
         [Required]
+        [DisplayName("Wednesday")]
         public bool ForWednesday { get; set; }
 
         [Required]
+        [DisplayName("Thursday")]
         public bool ForThursday { get; set; }
 
         [Required]
+        [DisplayName("Friday")]
         public bool ForFriday { get; set; }
 
         [Required]
+        [DisplayName("Saturday")]
         public bool ForSaturday { get; set; }
 
         [Required]
+        [DisplayName("Sunday")]
         public bool ForSunday { get; set; }
 
         // Associations
