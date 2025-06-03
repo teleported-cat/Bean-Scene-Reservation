@@ -5,6 +5,9 @@
 <h1 class="open-sans">@ViewData["Title"]</h1>
 
 @* TODO: Update the manager portal page to use a responsive grid layout with cards *@
+<hr />
+<h2>Manage Database</h2>
+
 <ul>
     <li>
         <a asp-area="" asp-controller="Areas" asp-action="Index">Areas</a>
@@ -25,3 +28,90 @@
         <a asp-area="" asp-controller="ApplicationUsers" asp-action="Index">Users</a>
     </li>
 </ul>
+
+<div class="container mt-2 mb-2">
+    <div class="row">
+        <div class="col home--card">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title">Areas</h2>
+                    <p class="card-text">
+                        <a class="btn btn-primary" asp-area="" asp-controller="Areas" asp-action="Index" >
+                            <i class="bi bi-search"></i>
+                            View All
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col home--card">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title">Tables</h2>
+                    <p class="card-text">
+                        <a class="btn btn-primary" asp-area="" asp-controller="Tables" asp-action="Index">
+                            <i class="bi bi-search"></i>
+                            View All
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col home--card">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title">Sittings</h2>
+                    <p class="card-text">
+                        <a class="btn btn-primary" asp-area="" asp-controller="Sittings" asp-action="Index">
+                            <i class="bi bi-search"></i>
+                            View All
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col home--card">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title">Sitting Schedules</h2>
+                    <p class="card-text">
+                        <a class="btn btn-primary" asp-area="" asp-controller="SittingSchedules" asp-action="Index">
+                            <i class="bi bi-search"></i>
+                            View All
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col home--card">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title">Reservations</h2>
+                    <p class="card-text">
+                        <a class="btn btn-primary" asp-area="" asp-controller="Reservations" asp-action="Index">
+                            <i class="bi bi-search"></i>
+                            View All
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col home--card">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title">Users</h2>
+                    <p class="card-text">
+                        <a class="btn btn-primary" asp-area="" asp-controller="ApplicationUsers" asp-action="Index">
+                            <i class="bi bi-search"></i>
+                            View All
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+<h2>View Reports</h2>
+
