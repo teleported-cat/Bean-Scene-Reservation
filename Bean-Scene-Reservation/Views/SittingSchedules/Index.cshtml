@@ -7,54 +7,36 @@
 <h1 class="open-sans">@ViewData["Title"]</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary" aria-label="Create Sitting Schedule" title="Create Sitting Schedule">
+        <i class="bi-plus-circle"></i>
+        Create Sitting Schedule
+    </a>
 </p>
-<table class="table">
+
+<div class="table-responsive">
+<table class="table align-middle">
+    <caption>List of all Sitting Schedules in Bean Scene</caption>
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Capacity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ForMonday)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ForTuesday)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ForWednesday)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ForThursday)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ForFriday)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ForSaturday)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ForSunday)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndTime)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.SittingType)
             </th>
-            <th></th>
+            <th>
+                Date Range
+            </th>
+            <th>
+                Weekdays
+            </th>
+            <th>
+                Time Range
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Capacity)
+            </th>
+            <th aria-label="Actions: Details, Edit, Delete"></th>
         </tr>
     </thead>
     <tbody>
@@ -64,50 +46,43 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Capacity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ForMonday)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ForTuesday)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ForWednesday)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ForThursday)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ForFriday)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ForSaturday)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ForSunday)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartTime.Time)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndTime.Time)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.SittingType.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @Html.DisplayFor(modelItem => item.StartDate) - @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            <td>
+                @{
+                    List<string> weekdays = new();
+                    if (item.ForMonday) {weekdays.Add("Mon");}
+                    if (item.ForTuesday) {weekdays.Add("Tue");}
+                    if (item.ForWednesday) {weekdays.Add("Wed");}
+                    if (item.ForThursday) {weekdays.Add("Thu");}
+                    if (item.ForFriday) {weekdays.Add("Fri");}
+                    if (item.ForSaturday) {weekdays.Add("Sat");}
+                    if (item.ForSunday) {weekdays.Add("Sun");}
+                }
+                @(string.Join(", ", weekdays))
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartTimeId) - @Html.DisplayFor(modelItem => item.EndTimeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Capacity)
+            </td>
+            <td class="text-end">
+                <a class="btn btn-primary" aria-label="Details" title="Details" asp-action="Details" asp-route-id="@item.Id">
+                    <i class="bi bi-search"></i>
+                </a>
+                <a class="btn btn-secondary" aria-label="Edit" title="Edit" asp-action="Edit" asp-route-id="@item.Id">
+                    <i class="bi bi-pencil"></i>
+                </a>
+                <a class="btn btn-danger" aria-label="Delete" title="Delete" asp-action="Delete" asp-route-id="@item.Id">
+                    <i class="bi bi-trash"></i>
+                </a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+</div>
