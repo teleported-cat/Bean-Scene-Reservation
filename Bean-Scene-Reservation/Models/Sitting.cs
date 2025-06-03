@@ -40,7 +40,8 @@ namespace Bean_Scene_Reservation.Models
         [Required]
         public int Capacity { get; set; }
 
-        // TODO: Add nullable foreign key for SittingSchedule
+        [DisplayName("Sitting Schedule")]
+        public int? SittingScheduleId { get; set; }
 
         // Associations
 
@@ -55,5 +56,9 @@ namespace Bean_Scene_Reservation.Models
         [DisplayName("End Time")]
         [DeleteBehavior(DeleteBehavior.Restrict)] // Or NoAction (same for SQL Server)
         public Timeslot? EndTime { get; set; }
+
+        [DisplayName("Sitting Schedule")]
+        [DeleteBehavior(DeleteBehavior.Restrict)] // Or NoAction (same for SQL Server)
+        public SittingSchedule? SittingSchedule { get; set; }
     }
 }

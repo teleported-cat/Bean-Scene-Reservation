@@ -12,7 +12,7 @@ namespace Bean_Scene_Reservation.Data
         public DbSet<Timeslot> Timeslots { get; set; }
         public DbSet<SittingType> SittingTypes { get; set; }
         public DbSet<Sitting> Sittings { get; set; }
-        // TODO: Scaffold sittings controller + views!!!!1! awesome sauce :3 
+        public DbSet<SittingSchedule> SittingSchedules { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
