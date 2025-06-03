@@ -1,17 +1,10 @@
 ﻿@model Bean_Scene_Reservation.Models.SittingSchedule
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Create New Sitting Schedule";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Create</title>
-</head>
-<body>
+<h1 class="open-sans">@ViewData["Title"]</h1>
 
 <h4>SittingSchedule</h4>
 <hr />
@@ -100,5 +93,3 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-</body>
-</html>
