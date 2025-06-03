@@ -1,3 +1,20 @@
+/* Bean Scene Colours */
+:root {
+    /* Primary Colours */
+    --DarkBlue: #083944; /* For H2 and Body Text */
+    --DarkBlueOp: rgba(8, 57, 68, 0.5);
+    --MidBlue: #2F6672; /* For H3 and further headings */
+    --LightBlue: #4AA1B5; /* For H1 and hyperlinks/buttons */
+    --White: #FFFFFF;
+    /* Secondary Colours (Use Sparingly) */
+    /* DarkGold & Gold can be used as backup colours for hyperlinks */
+    --DarkGold: #CC9E09;
+    --Gold: #EBC136;
+    --PaleGold: #F8E8B5;
+    --LightGrey: #E0E0E0;
+}
+
+/* Element Styling */
 html {
   font-size: 14px;
 }
@@ -19,4 +36,115 @@ html {
 
 body {
   margin-bottom: 60px;
+}
+
+/* Bean Scene Fonts */
+body { /* Body Text */
+    font-family: "Open Sans", Arial, sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings: 
+        "wdth" 100;
+    color: var(--DarkBlue);
+}
+
+h1 {
+    font-family: "Tangerine", cursive;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    color: var(--LightBlue);
+}
+
+h2 {
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    color: var(--DarkBlue);
+}
+
+h3, h4, h5, h6 {
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    color: var(--MidBlue);
+}
+
+a {
+    color: var(--LightBlue);
+}
+
+/* Classes */
+.header-title {
+    background-color: var(--DarkBlue);
+}
+
+.header-title a img {
+    width: 300px;
+}
+
+@media not (min-width: 300px) {
+    .header-title a img {
+        width: 100%;
+    }
+}
+
+.nav-link, .dropdown-item {
+    color: var(--DarkBlue) !important;
+    white-space: nowrap;
+}
+
+.carousel-item img {
+    object-fit: cover;
+}
+
+.carousel-caption {
+    background-color: var(--DarkBlueOp);
+    color: var(--White);
+    border-radius: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.carousel-caption h2 {
+    color: var(--White);
+}
+
+.home--card {
+    width: 300px;
+}
+
+.home--card__img {
+    height: 150px;
+    object-fit: cover;
+}
+
+.open-sans {
+    font-family: "Open Sans", Arial, sans-serif;
+    font-weight: 400;
+}
+
+.status-closed {
+    color: var(--bs-danger);
+}
+
+.status-open {
+    color: var(--bs-success);
+}
+
+:is(.status-open, .status-closed)::before {
+    display: inline-block;
+    font-family: bootstrap-icons !important;
+    font-weight: 400 !important;
+    line-height: 1;
+    vertical-align: -.125em;
+}
+
+.status-closed::before {
+    content: '\f622';
+}
+
+.status-open::before {
+    content: '\f26a';
 }

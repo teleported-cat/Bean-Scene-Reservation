@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Bean_Scene_Reservation.Models.Table>
+
+@{
+    ViewData["Title"] = "Manage Tables";
+}
+
+<h1 class="open-sans">@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary" aria-label="Add Table" title="Add Table">
+        <i class="bi-plus-circle"></i>
+        Add Table
+    </a>
+</p>
+
+<div class="table-responsive">
+    <table class="table align-middle">
+        <caption>List of all Tables within Bean Scene</caption>
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.TableNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Area)
+                </th>
+                <th aria-label="Actions: Edit, Delete"></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TableNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Area.Name)
+                </td>
+                <td class="text-end">
+                    <a class="btn btn-secondary" aria-label="Edit" title="Edit" asp-action="Edit" asp-route-id="@item.TableNumber">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <a class="btn btn-danger" aria-label="Delete" title="Delete" asp-action="Delete" asp-route-id="@item.TableNumber">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,33 @@
+﻿@model Bean_Scene_Reservation.Models.Table
+
+@{
+    ViewData["Title"] = "Delete " + Model.TableNumber;
+}
+
+<h1 class="open-sans">@(ViewData["Title"] + "?")</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TableNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TableNumber)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Area)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Area.Name)
+        </dd>
+    </dl>
+
+    <p>This action cannot be undone.</p>
+
+    <form class="mt-3" asp-action="Delete">
+        <input type="hidden" asp-for="TableNumber" />
+        <input type="submit" value="Delete" class="btn btn-danger" aria-label="Delete" title="Delete" />
+        <a asp-action="Index" class="btn btn-secondary" aria-label="Cancel" title="Cancel">Cancel</a>
+    </form>
+</div>

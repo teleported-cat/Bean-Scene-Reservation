@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Manager Portal";
+}
+
+<h1 class="open-sans">@ViewData["Title"]</h1>
+
+@* TODO: Update the manager portal page to use a responsive grid layout with cards *@
+<ul>
+    <li>
+        <a asp-area="" asp-controller="Areas" asp-action="Index">Areas</a>
+    </li>
+    <li>
+        <a asp-area="" asp-controller="Tables" asp-action="Index">Tables</a>
+    </li>
+    <li>
+        <a asp-area="" asp-controller="Sittings" asp-action="Index">Sittings</a>
+    </li>
+    <li>
+        <a asp-area="" asp-controller="SittingSchedules" asp-action="Index">Sitting Schedules</a>
+    </li>
+    <li>
+        <a asp-area="" asp-controller="Reservations" asp-action="Index">Reservations</a>
+    </li>
+    <li>
+        <a asp-area="" asp-controller="ApplicationUsers" asp-action="Index">Users</a>
+    </li>
+</ul>
