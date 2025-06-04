@@ -148,3 +148,8 @@ a {
 .status-open::before {
     content: '\f26a';
 }
+
+.btn-primary {
+    background-color: var(--LightBlue);
+    border-color: var(--LightBlue);
+}
