@@ -13,7 +13,7 @@ namespace Bean_Scene_Reservation.Models
         public string Name { get; set; }
 
 
-        // Navigation properities back to the list of associated tables
+        // Navigation properties back to the list of associated tables
         public ICollection<Table>? Tables { get; set; } = null;
 
         // Constructors 
