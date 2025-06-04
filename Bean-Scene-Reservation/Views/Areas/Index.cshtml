@@ -43,7 +43,7 @@
                     @* if the area has any tables, deleting it is disabled *@
                     @if (item.Tables?.Any() ?? false) {
                         <a class="btn btn-dark" aria-label="Cannot Delete" title="Cannot delete area as it has tables associated with it.">
-                            <i class="bi bi-trash"></i>
+                            <i class="bi bi-ban"></i>
                         </a>
                     } else {
                         <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" aria-label="Delete" title="Delete">
