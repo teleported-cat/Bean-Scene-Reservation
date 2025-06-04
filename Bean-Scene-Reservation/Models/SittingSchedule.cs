@@ -72,6 +72,9 @@ namespace Bean_Scene_Reservation.Models
         [DisplayName("Sunday")]
         public bool ForSunday { get; set; }
 
+        // Navigation properties back to the list of associated sittings
+        public ICollection<Sitting>? Sittings { get; set; } = null;
+
         // Associations
 
         [DisplayName("Start Time")]

@@ -38,6 +38,7 @@ namespace Bean_Scene_Reservation.Controllers
                 .Include(s => s.EndTime)
                 .Include(s => s.SittingType)
                 .Include(s => s.StartTime)
+                .Include(s => s.Sittings)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (sittingSchedule == null)
             {

@@ -7,7 +7,6 @@
 <h1 class="open-sans">@ViewData["Title"]</h1>
 
 <div>
-    <h4>SittingSchedule</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -59,50 +58,29 @@
             @Html.DisplayFor(model => model.Capacity) @(Model.Capacity != 1 ? "Guests" : "Guest")
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ForMonday)
+            Weekdays Affected
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ForMonday)
+            @{
+                List<string> weekdays = new();
+                if (Model.ForMonday) { weekdays.Add("Mon"); }
+                if (Model.ForTuesday) { weekdays.Add("Tue"); }
+                if (Model.ForWednesday) { weekdays.Add("Wed"); }
+                if (Model.ForThursday) { weekdays.Add("Thu"); }
+                if (Model.ForFriday) { weekdays.Add("Fri"); }
+                if (Model.ForSaturday) { weekdays.Add("Sat"); }
+                if (Model.ForSunday) { weekdays.Add("Sun"); }
+            }
+            @(string.Join(", ", weekdays))
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ForTuesday)
+        <dt class="col-sm-2">
+            Number of Sittings
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ForTuesday)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ForWednesday)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ForWednesday)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ForThursday)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ForThursday)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ForFriday)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ForFriday)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ForSaturday)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ForSaturday)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ForSunday)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ForSunday)
+        <dd class="col-sm-10">
+            @(Model.Sittings?.Count ?? 0)
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="border-top pt-4">
+    <a asp-action="Index" class="btn btn-secondary" aria-label="Cancel">Cancel</a>
 </div>
