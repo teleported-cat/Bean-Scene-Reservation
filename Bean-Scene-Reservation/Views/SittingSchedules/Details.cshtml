@@ -10,6 +10,12 @@
     <h4>SittingSchedule</h4>
     <hr />
     <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
@@ -17,10 +23,10 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Capacity)
+            @Html.DisplayNameFor(model => model.SittingType)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Capacity)
+            @Html.DisplayFor(model => model.SittingType.Name)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.StartDate)
@@ -33,6 +39,24 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.EndDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.StartTime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.StartTime.Time)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EndTime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EndTime.Time)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Capacity)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Capacity) @(Model.Capacity != 1 ? "Guests" : "Guest")
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ForMonday)
@@ -75,24 +99,6 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.ForSunday)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartTime.Time)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EndTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EndTime.Time)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SittingType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SittingType.Name)
         </dd>
     </dl>
 </div>

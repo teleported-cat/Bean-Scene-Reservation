@@ -75,62 +75,62 @@ namespace Bean_Scene_Reservation.Controllers
             return View(sittingSchedule);
         }
 
-        // GET: SittingSchedules/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //// GET: SittingSchedules/Edit/5
+        //public async Task<IActionResult> Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var sittingSchedule = await _context.SittingSchedules.FindAsync(id);
-            if (sittingSchedule == null)
-            {
-                return NotFound();
-            }
-            ViewData["EndTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", sittingSchedule.EndTimeId);
-            ViewData["SittingTypeId"] = new SelectList(_context.SittingTypes, "Id", "Name", sittingSchedule.SittingTypeId);
-            ViewData["StartTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", sittingSchedule.StartTimeId);
-            return View(sittingSchedule);
-        }
+        //    var sittingSchedule = await _context.SittingSchedules.FindAsync(id);
+        //    if (sittingSchedule == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    ViewData["EndTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", sittingSchedule.EndTimeId);
+        //    ViewData["SittingTypeId"] = new SelectList(_context.SittingTypes, "Id", "Name", sittingSchedule.SittingTypeId);
+        //    ViewData["StartTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", sittingSchedule.StartTimeId);
+        //    return View(sittingSchedule);
+        //}
 
-        // POST: SittingSchedules/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Capacity,StartDate,EndDate,StartTimeId,EndTimeId,SittingTypeId,ForMonday,ForTuesday,ForWednesday,ForThursday,ForFriday,ForSaturday,ForSunday")] SittingSchedule sittingSchedule)
-        {
-            if (id != sittingSchedule.Id)
-            {
-                return NotFound();
-            }
+        //// POST: SittingSchedules/Edit/5
+        //// To protect from overposting attacks, enable the specific properties you want to bind to.
+        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Capacity,StartDate,EndDate,StartTimeId,EndTimeId,SittingTypeId,ForMonday,ForTuesday,ForWednesday,ForThursday,ForFriday,ForSaturday,ForSunday")] SittingSchedule sittingSchedule)
+        //{
+        //    if (id != sittingSchedule.Id)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(sittingSchedule);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!SittingScheduleExists(sittingSchedule.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["EndTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", sittingSchedule.EndTimeId);
-            ViewData["SittingTypeId"] = new SelectList(_context.SittingTypes, "Id", "Name", sittingSchedule.SittingTypeId);
-            ViewData["StartTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", sittingSchedule.StartTimeId);
-            return View(sittingSchedule);
-        }
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            _context.Update(sittingSchedule);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!SittingScheduleExists(sittingSchedule.Id))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["EndTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", sittingSchedule.EndTimeId);
+        //    ViewData["SittingTypeId"] = new SelectList(_context.SittingTypes, "Id", "Name", sittingSchedule.SittingTypeId);
+        //    ViewData["StartTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", sittingSchedule.StartTimeId);
+        //    return View(sittingSchedule);
+        //}
 
         // GET: SittingSchedules/Delete/5
         public async Task<IActionResult> Delete(int? id)

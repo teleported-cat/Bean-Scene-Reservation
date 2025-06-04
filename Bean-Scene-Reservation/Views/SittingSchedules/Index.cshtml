@@ -36,7 +36,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Capacity)
             </th>
-            <th aria-label="Actions: Details, Edit, Delete"></th>
+            <th aria-label="Actions: Details, Delete"></th>
         </tr>
     </thead>
     <tbody>
@@ -68,14 +68,11 @@
                 @Html.DisplayFor(modelItem => item.StartTimeId) - @Html.DisplayFor(modelItem => item.EndTimeId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Capacity)
+                @Html.DisplayFor(modelItem => item.Capacity) @(item.Capacity != 1 ? "Guests" : "Guest")
             </td>
             <td class="text-end">
                 <a class="btn btn-primary" aria-label="Details" title="Details" asp-action="Details" asp-route-id="@item.Id">
                     <i class="bi bi-search"></i>
-                </a>
-                <a class="btn btn-secondary" aria-label="Edit" title="Edit" asp-action="Edit" asp-route-id="@item.Id">
-                    <i class="bi bi-pencil"></i>
                 </a>
                 <a class="btn btn-danger" aria-label="Delete" title="Delete" asp-action="Delete" asp-route-id="@item.Id">
                     <i class="bi bi-trash"></i>
