@@ -6,7 +6,6 @@
 
 <h1 class="open-sans">@ViewData["Title"]</h1>
 
-<h4>SittingSchedule</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -44,50 +43,50 @@
                 <label asp-for="SittingTypeId" class="control-label"></label>
                 <select asp-for="SittingTypeId" class ="form-control" asp-items="ViewBag.SittingTypeId"></select>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="ForMonday" /> @Html.DisplayNameFor(model => model.ForMonday)
-                </label>
+            <div class="border-top mt-3 pt-3">
+                Affects Weekdays: 
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="ForMonday" /> @Html.DisplayNameFor(model => model.ForMonday)
+                    </label>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="ForTuesday" /> @Html.DisplayNameFor(model => model.ForTuesday)
+                    </label>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="ForWednesday" /> @Html.DisplayNameFor(model => model.ForWednesday)
+                    </label>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="ForThursday" /> @Html.DisplayNameFor(model => model.ForThursday)
+                    </label>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="ForFriday" /> @Html.DisplayNameFor(model => model.ForFriday)
+                    </label>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="ForSaturday" /> @Html.DisplayNameFor(model => model.ForSaturday)
+                    </label>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="ForSunday" /> @Html.DisplayNameFor(model => model.ForSunday)
+                    </label>
+                </div>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="ForTuesday" /> @Html.DisplayNameFor(model => model.ForTuesday)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="ForWednesday" /> @Html.DisplayNameFor(model => model.ForWednesday)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="ForThursday" /> @Html.DisplayNameFor(model => model.ForThursday)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="ForFriday" /> @Html.DisplayNameFor(model => model.ForFriday)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="ForSaturday" /> @Html.DisplayNameFor(model => model.ForSaturday)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="ForSunday" /> @Html.DisplayNameFor(model => model.ForSunday)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="form-group border-top mt-4 pt-4">
+                <input type="submit" value="Create" class="btn btn-primary" aria-label="Create" />
+                <a asp-action="Index" class="btn btn-secondary" aria-label="Cancel">Cancel</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
