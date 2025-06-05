@@ -14,62 +14,71 @@
 </p>
 
 <div class="table-responsive">
-<table class="table align-middle">
-    <caption>List of all Sittings in Bean Scene</caption>
-    <thead>
-        <tr>
-            <th>
-                Weekday
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SittingType)
-            </th>
-            <th>
-                Sitting Times
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Capacity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th aria-label="Actions: Edit, Delete"></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @item.Date.DayOfWeek
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SittingType.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartTimeId) - @Html.DisplayFor(modelItem => item.EndTimeId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Capacity) @(item.Capacity != 1 ? "Guests" : "Guest")
-            </td>
-            <td class="status-@(item.Status.ToString().ToLower())">
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td class="text-end">
-                <a class="btn btn-secondary" aria-label="Edit" title="Edit" asp-action="Edit" asp-route-date="@item.Date.ToString("yyyy-MM-dd")" asp-route-type="@item.SittingTypeId">
-                    <i class="bi bi-pencil"></i>
+    <table class="table align-middle">
+        <caption>List of all Sittings in Bean Scene</caption>
+        <thead>
+            <tr>
+                <th>
+                    Weekday
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SittingType)
+                </th>
+                <th>
+                    Sitting Times
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Capacity)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SittingScheduleId)
+                </th>
+                <th aria-label="Actions: Edit, Delete"></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @item.Date.DayOfWeek
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SittingType.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartTimeId) - @Html.DisplayFor(modelItem => item.EndTimeId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Capacity) @(item.Capacity != 1 ? "Guests" : "Guest")
+                </td>
+                <td class="status-@(item.Status.ToString().ToLower())">
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @(item.SittingSchedule?.Name ?? "(No Schedule)")
+                </td>
+                <td class="text-end">
+                <a class="btn btn-primary" aria-label="Details" title="Details" asp-action="Details" asp-route-date="@item.Date.ToString("yyyy-MM-dd")" asp-route-type="@item.SittingTypeId">
+                    <i class="bi bi-search"></i>
                 </a>
-                    <a class="btn btn-danger" aria-label="Delete" title="Delete" asp-action="Delete" asp-route-date="@item.Date.ToString("yyyy-MM-dd")" asp-route-type="@item.SittingTypeId">
-                    <i class="bi bi-trash"></i>
-                </a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                    <a class="btn btn-secondary" aria-label="Edit" title="Edit" asp-action="Edit" asp-route-date="@item.Date.ToString("yyyy-MM-dd")" asp-route-type="@item.SittingTypeId">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                        <a class="btn btn-danger" aria-label="Delete" title="Delete" asp-action="Delete" asp-route-date="@item.Date.ToString("yyyy-MM-dd")" asp-route-type="@item.SittingTypeId">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
 </div>

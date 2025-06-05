@@ -1,57 +1,72 @@
 ﻿@model Bean_Scene_Reservation.Models.Sitting
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Add New Sitting";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Details</title>
-</head>
-<body>
+<h1 class="open-sans">@ViewData["Title"]</h1>
 
 <div>
-    <h4>Sitting</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
+        <dt class="col-sm-2">
+            Weekday
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
+        <dd class="col-sm-10">
+            @Model.Date.DayOfWeek
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SittingType)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SittingType.Name)
+        </dd>
+        <dt class="col-sm-2">
+            Sitting Times
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StartTimeId) - @Html.DisplayFor(model => model.EndTimeId)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Capacity)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Capacity)
-        </dd>
+        </dd>        
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SittingType)
+            @Html.DisplayNameFor(model => model.Status)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SittingType.Name)
+            @Html.DisplayFor(model => model.Status)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartTime)
+        <hr />
+        <dt class="col-sm-2">
+            Schedule Id
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartTime.Time)
+        <dd class="col-sm-10">
+            @if (Model.SittingScheduleId != null)
+            {
+                @Html.DisplayFor(model => model.SittingScheduleId)
+            } else
+            {
+                @:(No Schedule)
+            }
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EndTime)
+        <dt class="col-sm-2">
+            Schedule Name
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EndTime.Time)
+        <dd class="col-sm-10">
+            @(Model.SittingSchedule?.Name ?? "(No Schedule)")
         </dd>
     </dl>
 </div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
+<div class="form-group border-top mt-4 pt-4">
+    <a class="btn btn-primary" aria-label="Edit" title="Edit" asp-action="Edit" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" asp-route-type="@Model.SittingTypeId">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary" aria-label="Cancel">Cancel</a>
 </div>
-</body>
-</html>

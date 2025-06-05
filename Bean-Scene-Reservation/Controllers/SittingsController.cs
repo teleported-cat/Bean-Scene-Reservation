@@ -25,7 +25,8 @@ namespace Bean_Scene_Reservation.Controllers
             var applicationDbContext = _context.Sittings
                 .Include(s => s.EndTime)
                 .Include(s => s.SittingType)
-                .Include(s => s.StartTime);
+                .Include(s => s.StartTime)
+                .Include(s => s.SittingSchedule);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -42,6 +43,7 @@ namespace Bean_Scene_Reservation.Controllers
                 .Include(s => s.EndTime)
                 .Include(s => s.SittingType)
                 .Include(s => s.StartTime)
+                .Include(s => s.SittingSchedule)
                 .FirstOrDefaultAsync(s => s.Date == date && s.SittingTypeId == type);
             if (sitting == null)
             {
@@ -101,6 +103,7 @@ namespace Bean_Scene_Reservation.Controllers
                 .Include(s => s.EndTime)
                 .Include(s => s.SittingType)
                 .Include(s => s.StartTime)
+                .Include(s => s.SittingSchedule)
                 .FirstOrDefaultAsync(s => s.Date == date && s.SittingTypeId == type);
             if (sitting == null)
             {

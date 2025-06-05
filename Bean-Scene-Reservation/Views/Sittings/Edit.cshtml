@@ -42,6 +42,22 @@
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group border-top mt-4 pt-4">
+                @if (@Model.SittingScheduleId == null)
+                {
+                    <p>
+                        <strong>Schedule Id:</strong> (No Schedule) <br />
+                        <strong>Schedule Name:</strong> (No Schedule)
+                    </p>
+                } else
+                {
+                    <p>
+                        <strong>Schedule Id:</strong> @Model.SittingScheduleId <br />
+                        <strong>Schedule Name:</strong> @Model.SittingSchedule.Name
+                    </p>
+                    <a asp-action="Decouple" class="btn btn-danger" aria-label="Decouple" title="Disconnect the schedule from this sitting">Decouple Schedule</a>
+                }
+            </div>
+            <div class="form-group border-top mt-4 pt-4">
                 <input type="submit" value="Save" class="btn btn-primary" aria-label="Save" />
                 <a asp-action="Index" class="btn btn-secondary" aria-label="Cancel">Cancel</a>
             </div>
