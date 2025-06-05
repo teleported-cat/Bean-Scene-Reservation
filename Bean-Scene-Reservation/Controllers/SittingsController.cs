@@ -22,7 +22,10 @@ namespace Bean_Scene_Reservation.Controllers
         // GET: Sittings
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Sittings.Include(s => s.EndTime).Include(s => s.SittingType).Include(s => s.StartTime);
+            var applicationDbContext = _context.Sittings
+                .Include(s => s.EndTime)
+                .Include(s => s.SittingType)
+                .Include(s => s.StartTime);
             return View(await applicationDbContext.ToListAsync());
         }
 
