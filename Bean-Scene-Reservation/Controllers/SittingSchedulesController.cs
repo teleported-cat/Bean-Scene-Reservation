@@ -65,9 +65,16 @@ namespace Bean_Scene_Reservation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Capacity,StartDate,EndDate,StartTimeId,EndTimeId,SittingTypeId,ForMonday,ForTuesday,ForWednesday,ForThursday,ForFriday,ForSaturday,ForSunday")] SittingSchedule sittingSchedule)
         {
+            /*
+            var sittingsContext = _context.Sittings
+                .Include(s => s.EndTime)
+                .Include(s => s.SittingType)
+                .Include(s => s.StartTime);
+            var sittings = await sittingsContext.ToListAsync();
+
             // Perform pre-check to see if there are any sittings of said type already within the date & weekday range
             foreach (var day in EachDay(sittingSchedule.StartDate, sittingSchedule.EndDate)) {
-                // Check if the weekday is a part of the schedule
+                // Check if the weekday is a part of the schedule, else skip this day
                 string weekdayCurrent = day.DayOfWeek.ToString();
                 if (weekdayCurrent == "Monday" && !sittingSchedule.ForMonday) { continue; }
                 if (weekdayCurrent == "Tuesday" && !sittingSchedule.ForTuesday) { continue; }
@@ -77,13 +84,19 @@ namespace Bean_Scene_Reservation.Controllers
                 if (weekdayCurrent == "Saturday" && !sittingSchedule.ForSaturday) { continue; }
                 if (weekdayCurrent == "Sunday" && !sittingSchedule.ForSunday) { continue; }
 
+                // Check if a sitting already exists for the date + type
+                if (sittings.Any(s => s.Date == day && s.SittingTypeId == sittingSchedule.SittingTypeId))
+                {
+                    // Add to a list of dates to display to the user when 
+                }
+
 
             }
 
             // If there are sittings, display and warn them
 
             // If user continues, generate sittings (skip pre-existing sittings)
-
+            */
 
             if (ModelState.IsValid)
             {
@@ -98,62 +111,98 @@ namespace Bean_Scene_Reservation.Controllers
             return View(sittingSchedule);
         }
 
-        //// GET: SittingSchedules/Edit/5
-        //public async Task<IActionResult> Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // GET: SittingSchedules/GenerateSittings/5
+        [HttpGet]
+        public async Task<IActionResult> GenerateSittings(int? id)
+        {
+            // After creating the schedule,
+            // the user is redirected to this view to choose to generate the sittings,
+            // delete the schedule, or do neither.
 
-        //    var sittingSchedule = await _context.SittingSchedules.FindAsync(id);
-        //    if (sittingSchedule == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    ViewData["EndTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", sittingSchedule.EndTimeId);
-        //    ViewData["SittingTypeId"] = new SelectList(_context.SittingTypes, "Id", "Name", sittingSchedule.SittingTypeId);
-        //    ViewData["StartTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", sittingSchedule.StartTimeId);
-        //    return View(sittingSchedule);
-        //}
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        //// POST: SittingSchedules/Edit/5
-        //// To protect from overposting attacks, enable the specific properties you want to bind to.
-        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Capacity,StartDate,EndDate,StartTimeId,EndTimeId,SittingTypeId,ForMonday,ForTuesday,ForWednesday,ForThursday,ForFriday,ForSaturday,ForSunday")] SittingSchedule sittingSchedule)
-        //{
-        //    if (id != sittingSchedule.Id)
-        //    {
-        //        return NotFound();
-        //    }
+            var sittingSchedule = await _context.SittingSchedules
+                .Include(s => s.EndTime)
+                .Include(s => s.SittingType)
+                .Include(s => s.StartTime)
+                .Include(s => s.Sittings)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (sittingSchedule == null)
+            {
+                return NotFound();
+            }
 
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(sittingSchedule);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!SittingScheduleExists(sittingSchedule.Id))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["EndTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", sittingSchedule.EndTimeId);
-        //    ViewData["SittingTypeId"] = new SelectList(_context.SittingTypes, "Id", "Name", sittingSchedule.SittingTypeId);
-        //    ViewData["StartTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", sittingSchedule.StartTimeId);
-        //    return View(sittingSchedule);
-        //}
+            var sittings = _context.Sittings
+                .Include(s => s.SittingType)
+                .Where(s =>
+                s.SittingTypeId == sittingSchedule.SittingTypeId 
+                && s.Date >= sittingSchedule.StartDate 
+                && s.Date <= sittingSchedule.EndDate
+                );
+
+            ViewData["Sittings"] = sittings.ToListAsync();
+
+            return View(sittingSchedule);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GenerateSittings(int id)
+        {
+            var sittingSchedule = await _context.SittingSchedules.FindAsync(id);
+            if (sittingSchedule == null)
+            {
+                return NotFound();
+            }
+
+            var sittings = _context.Sittings
+                .Include(s => s.SittingType)
+                .Where(s =>
+                s.SittingTypeId == sittingSchedule.SittingTypeId
+                && s.Date >= sittingSchedule.StartDate
+                && s.Date <= sittingSchedule.EndDate
+                );
+
+            // Loop every day within the start & end date
+            foreach (var day in EachDay(sittingSchedule.StartDate, sittingSchedule.EndDate))
+            {
+                string weekdayCurrent = day.DayOfWeek.ToString();
+
+                // Skip if it is a false weekday
+                if (weekdayCurrent == "Monday" && !sittingSchedule.ForMonday) { continue; }
+                if (weekdayCurrent == "Tuesday" && !sittingSchedule.ForTuesday) { continue; }
+                if (weekdayCurrent == "Wednesday" && !sittingSchedule.ForWednesday) { continue; }
+                if (weekdayCurrent == "Thursday" && !sittingSchedule.ForThursday) { continue; }
+                if (weekdayCurrent == "Friday" && !sittingSchedule.ForFriday) { continue; }
+                if (weekdayCurrent == "Saturday" && !sittingSchedule.ForSaturday) { continue; }
+                if (weekdayCurrent == "Sunday" && !sittingSchedule.ForSunday) { continue; }
+
+                // If a sitting already exists: skip
+                if (sittings.Any(s => s.Date == day && s.SittingTypeId == sittingSchedule.SittingTypeId))
+                {
+                    continue;
+                }
+
+                // Else: create a new sitting
+                var sitting = new Sitting {
+                    Date = day,
+                    SittingTypeId = sittingSchedule.SittingTypeId,
+                    StartTimeId = sittingSchedule.StartTimeId,
+                    EndTimeId = sittingSchedule.EndTimeId,
+                    Status = (Sitting.SittingStatus)1,
+                    Capacity = sittingSchedule.Capacity,
+                    SittingScheduleId = sittingSchedule.Id,
+                };
+
+                _context.Add(sitting);
+            }
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
 
         // GET: SittingSchedules/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -226,5 +275,6 @@ namespace Bean_Scene_Reservation.Controllers
             for (var day = from; day <= thru; day = day.AddDays(1))
                 yield return day;
         }
+
     }
 }
