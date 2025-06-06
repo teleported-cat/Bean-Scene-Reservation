@@ -13,6 +13,7 @@ namespace Bean_Scene_Reservation.Data
         public DbSet<SittingType> SittingTypes { get; set; }
         public DbSet<Sitting> Sittings { get; set; }
         public DbSet<SittingSchedule> SittingSchedules { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
