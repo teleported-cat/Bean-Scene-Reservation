@@ -47,17 +47,17 @@ namespace Bean_Scene_Reservation.Models
         public ushort NumberOfGuests { get; set; } = 1;
 
         [Required]
-        [DisplayName("First name")]
+        [DisplayName("First Name")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Must be between 2-50 characters")]
         public string FirstName { get; set; } = null!;
 
         [Required]
-        [DisplayName("Last name")]
+        [DisplayName("Last Name")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Must be between 2-50 characters")]
         public string LastName { get; set; } = null!;
 
         [NotMapped]
-        [DisplayName("Full name")]
+        [DisplayName("Full Name")]
         public string FullName { get => $"{FirstName.Trim()} {LastName.Trim()}"; }
 
         [StringLength(256)]
@@ -78,6 +78,16 @@ namespace Bean_Scene_Reservation.Models
             InProgress = 2,
             Completed = 3,
             Cancelled = 4,
+        }
+
+        public ReservationSource Source { get; set; }
+
+        public enum ReservationSource
+        {
+            Online = 0,
+            InPerson = 1,
+            Email = 2,
+            Phone = 3,
         }
 
         // Associations (Navigation properties)
