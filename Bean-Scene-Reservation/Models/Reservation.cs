@@ -84,7 +84,7 @@ namespace Bean_Scene_Reservation.Models
 
         [ForeignKey("Date, SittingTypeId")]
         [DeleteBehavior(DeleteBehavior.Restrict)]
-        public Sitting? Sitting { get; set; }
+        public SittingType? SittingType { get; set; }
 
         [DeleteBehavior(DeleteBehavior.Restrict)]
         [DisplayName("Start Time")]
