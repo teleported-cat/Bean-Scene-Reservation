@@ -234,6 +234,18 @@ namespace Bean_Scene_Reservation.Controllers
             var sittingSchedule = await _context.SittingSchedules.FindAsync(id);
             if (sittingSchedule != null)
             {
+                // First: Delete all sittings with the schedule id
+                var sittings = await _context.Sittings.Where(s => s.SittingScheduleId == id).ToListAsync();
+
+                if (sittings.Count != 0)
+                {
+                    foreach (var sitting in sittings)
+                    {
+                        _context.Sittings.Remove(sitting);
+                    }
+                }
+
+                // Final: Delete the schedule itself
                 _context.SittingSchedules.Remove(sittingSchedule);
             }
 
