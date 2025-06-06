@@ -21,6 +21,10 @@ namespace Bean_Scene_Reservation.Models
         [DeleteBehavior(DeleteBehavior.Restrict)] // Or NoAction (same for SQL Server)
         public Area? Area { get; set; }
 
+        // Define a many-to-many relationship between Reservation and Table (check the Reservation model)
+        [DisplayName("Assigned Reservations")]
+        public ICollection<Reservation> Reservations { get; } = [];
+
         // Constructors 
         public Table()
         {
