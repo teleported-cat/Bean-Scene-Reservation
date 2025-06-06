@@ -52,7 +52,7 @@ body { /* Body Text */
 }
 
 h1 {
-    font-family: "Tangerine", cursive;
+    font-family: "Open Sans", Arial, sans-serif;
     font-optical-sizing: auto;
     font-weight: 300;
     font-style: normal;
@@ -122,8 +122,8 @@ a {
     object-fit: cover;
 }
 
-.open-sans {
-    font-family: "Open Sans", Arial, sans-serif;
+.tangerine {
+    font-family: "Tangerine", cursive;
     font-weight: 300;
 }
 
