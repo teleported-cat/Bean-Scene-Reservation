@@ -22,7 +22,13 @@ namespace Bean_Scene_Reservation.Controllers
         // GET: Reservations
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Reservations.Include(r => r.Area).Include(r => r.EndTime).Include(r => r.Sitting).Include(r => r.StartTime);
+            var applicationDbContext = _context.Reservations
+                .Include(r => r.Area)
+                .Include(r => r.StartTime)
+                .Include(r => r.EndTime)
+                .Include(r => r.Sitting)
+                .ThenInclude(s => s.SittingType);
+                //.Include(r => r.User)
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -36,9 +42,11 @@ namespace Bean_Scene_Reservation.Controllers
 
             var reservation = await _context.Reservations
                 .Include(r => r.Area)
+                .Include(r => r.StartTime)
                 .Include(r => r.EndTime)
                 .Include(r => r.Sitting)
-                .Include(r => r.StartTime)
+                .ThenInclude(s => s.SittingType)
+                //.Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (reservation == null)
             {
@@ -51,10 +59,13 @@ namespace Bean_Scene_Reservation.Controllers
         // GET: Reservations/Create
         public IActionResult Create()
         {
-            ViewData["AreaId"] = new SelectList(_context.Areas, "Id", "Name");
-            ViewData["EndTimeId"] = new SelectList(_context.Timeslots, "Time", "Time");
-            ViewData["SittingId"] = new SelectList(_context.SittingTypes, "Id", "Name");
-            ViewData["StartTimeId"] = new SelectList(_context.Timeslots, "Time", "Time");
+            //ViewData["AreaId"] = new SelectList(_context.Areas, "Id", "Name");
+            //ViewData["StartTimeId"] = new SelectList(_context.Timeslots, "Time", "Time");
+            //ViewData["EndTimeId"] = new SelectList(_context.Timeslots, "Time", "Time");
+            //ViewData["SittingId"] = new SelectList(_context.SittingTypes, "Id", "Name");
+            //ViewData["Date"] = new SelectList(_context.Sittings, "Date", "Date");
+            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+            PopulateViewData();
             return View();
         }
 
@@ -71,10 +82,11 @@ namespace Bean_Scene_Reservation.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AreaId"] = new SelectList(_context.Areas, "Id", "Name", reservation.AreaId);
-            ViewData["EndTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", reservation.EndTimeId);
-            ViewData["SittingTypeId"] = new SelectList(_context.SittingTypes, "Id", "Name", reservation.SittingTypeId);
-            ViewData["StartTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", reservation.StartTimeId);
+            //ViewData["AreaId"] = new SelectList(_context.Areas, "Id", "Name", reservation.AreaId);
+            //ViewData["EndTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", reservation.EndTimeId);
+            //ViewData["SittingTypeId"] = new SelectList(_context.SittingTypes, "Id", "Name", reservation.SittingTypeId);
+            //ViewData["StartTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", reservation.StartTimeId);
+            PopulateViewData(reservation);
             return View(reservation);
         }
 
@@ -178,5 +190,40 @@ namespace Bean_Scene_Reservation.Controllers
         {
             return _context.Reservations.Any(e => e.Id == id);
         }
+
+        #region PopulateViewDataOverloads
+        private void PopulateViewData()
+        {
+            PopulateViewData(null, null, null, null, null); // Add one more null once users are added
+        }
+        private void PopulateViewData(Reservation reservation)
+        {
+            PopulateViewData(
+                reservation.AreaId, 
+                reservation.StartTimeId, 
+                reservation.EndTimeId, 
+                reservation.SittingTypeId, 
+                reservation.Date
+                //reservation.UserId
+                );
+        }
+        private void PopulateViewData(
+            int? areaId = null, 
+            TimeOnly? startTimeId = null, 
+            TimeOnly? endTimeId = null,
+            int? sittingTypeId = null,
+            DateOnly? date = null
+            //int? userId = null
+            )
+        {
+            ViewData["AreaId"] = new SelectList(_context.Areas, "Id", "Name", areaId);
+            ViewData["StartTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", startTimeId);
+            ViewData["EndTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", endTimeId);
+            ViewData["SittingTypeId"] = new SelectList(_context.SittingTypes, "Id", "Name", sittingTypeId);
+            ViewData["Date"] = new SelectList(_context.Sittings, "Date", "Date", date);
+            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+        }
+
+        #endregion
     }
 }
