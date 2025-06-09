@@ -92,9 +92,9 @@ namespace Bean_Scene_Reservation.Models
 
         // Associations (Navigation properties)
 
-        [ForeignKey("SittingTypeId")]
+        [ForeignKey("Date, SittingTypeId")]
         [DeleteBehavior(DeleteBehavior.Restrict)]
-        public SittingType? SittingType { get; set; }
+        public Sitting? Sitting { get; set; }
 
         [DeleteBehavior(DeleteBehavior.Restrict)]
         [DisplayName("Start Time")]

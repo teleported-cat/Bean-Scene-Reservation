@@ -22,7 +22,7 @@ namespace Bean_Scene_Reservation.Controllers
         // GET: Reservations
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Reservations.Include(r => r.Area).Include(r => r.EndTime).Include(r => r.SittingType).Include(r => r.StartTime);
+            var applicationDbContext = _context.Reservations.Include(r => r.Area).Include(r => r.EndTime).Include(r => r.Sitting).Include(r => r.StartTime);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -37,7 +37,7 @@ namespace Bean_Scene_Reservation.Controllers
             var reservation = await _context.Reservations
                 .Include(r => r.Area)
                 .Include(r => r.EndTime)
-                .Include(r => r.SittingType)
+                .Include(r => r.Sitting)
                 .Include(r => r.StartTime)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (reservation == null)
@@ -53,7 +53,7 @@ namespace Bean_Scene_Reservation.Controllers
         {
             ViewData["AreaId"] = new SelectList(_context.Areas, "Id", "Name");
             ViewData["EndTimeId"] = new SelectList(_context.Timeslots, "Time", "Time");
-            ViewData["SittingTypeId"] = new SelectList(_context.SittingTypes, "Id", "Name");
+            ViewData["SittingId"] = new SelectList(_context.SittingTypes, "Id", "Name");
             ViewData["StartTimeId"] = new SelectList(_context.Timeslots, "Time", "Time");
             return View();
         }
@@ -148,7 +148,7 @@ namespace Bean_Scene_Reservation.Controllers
             var reservation = await _context.Reservations
                 .Include(r => r.Area)
                 .Include(r => r.EndTime)
-                .Include(r => r.SittingType)
+                .Include(r => r.Sitting)
                 .Include(r => r.StartTime)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (reservation == null)

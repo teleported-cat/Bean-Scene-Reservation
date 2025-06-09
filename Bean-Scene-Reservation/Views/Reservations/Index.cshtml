@@ -24,7 +24,7 @@
                     @Html.DisplayNameFor(model => model.Date)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.SittingTypeId)
+                    @Html.DisplayNameFor(model => model.Sitting.SittingTypeId)
                 </th>
                 <th>
                     Reservation Times
@@ -57,7 +57,7 @@
                     @Html.DisplayFor(modelItem => item.Date)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SittingType.Name)
+                    @Html.DisplayFor(modelItem => item.Sitting.SittingType.Name)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.StartTimeId) - @Html.DisplayFor(modelItem => item.EndTimeId)
