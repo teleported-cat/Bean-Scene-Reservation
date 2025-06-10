@@ -58,7 +58,7 @@ namespace Bean_Scene_Reservation.Models
 
         [NotMapped]
         [DisplayName("Full Name")]
-        public string FullName { get => $"{FirstName.Trim()} {LastName.Trim()}"; }
+        public string FullName { get => $"{FirstName?.Trim() ?? ""} {LastName?.Trim() ?? ""}"; }
 
         [StringLength(256)]
         [EmailAddress]
