@@ -77,9 +77,11 @@ namespace Bean_Scene_Reservation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note,Status")] Reservation reservation)
         {
+            var sittings = _context.Sittings;
+
             // Check if the sitting actually exists (remember, a sitting is a date PLUS a type)
             // Without this check, we can select a non-existant type on an existing date, causing a SQL error
-            bool sittingExists = _context.Sittings
+            bool sittingExists = sittings
                 .Any(s => s.Date == reservation.Date && s.SittingTypeId == reservation.SittingTypeId);
             if (!sittingExists)
             {
@@ -94,7 +96,20 @@ namespace Bean_Scene_Reservation.Controllers
             }
 
             // Check if the start and end time are within the sitting's time frame
-            
+            var sitting = sittings
+                .Where(s => s.Date == reservation.Date && s.SittingTypeId == reservation.SittingTypeId).First();
+            if (reservation.StartTimeId < sitting.StartTimeId)
+            {
+                ModelState.AddModelError("StartTimeId", "Sorry, this start time is before the sitting begins.");
+            }
+            if (reservation.EndTimeId > sitting.EndTimeId)
+            {
+                ModelState.AddModelError("EndTimeId", "Sorry, this end time is after the sitting ends.");
+            }
+
+            // Check if the reservation exceeds sitting max capacity
+            // (it should also count the number of reservations already in this sitting to prevent too many sittings)
+
 
             if (ModelState.IsValid)
             {
