@@ -85,6 +85,17 @@ namespace Bean_Scene_Reservation.Controllers
             {
                 ModelState.AddModelError("SittingTypeId", "Sorry, this sitting doesn't exist for this date.");
             }
+
+            // Obviously check if the start time is after the end time
+            // Comparing using the timeslot's id is hacky... but smart
+            if (reservation.StartTimeId >= reservation.EndTimeId)
+            {
+                ModelState.AddModelError("StartTimeId", "The start time cannot be the same or after the end time.");
+            }
+
+            // Check if the start and end time are within the sitting's time frame
+
+
             if (ModelState.IsValid)
             {
                 _context.Add(reservation);
