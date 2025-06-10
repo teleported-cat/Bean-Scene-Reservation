@@ -216,11 +216,26 @@ namespace Bean_Scene_Reservation.Controllers
             //int? userId = null
             )
         {
-            ViewData["AreaId"] = new SelectList(_context.Areas, "Id", "Name", areaId);
+            // Only select dates in the future, open, and prevent duplicate values
+            var dateGrouping = _context.Sittings
+                .GroupBy(s => s.Date).Select(g => g.First()).AsEnumerable();
+            var dateContext = dateGrouping
+                .Where(s => s.Date >= DateOnly.FromDateTime(DateTime.Today) && s.Status == Enum.Parse<Sitting.SittingStatus>("Open"));
+            ViewData["Date"] = new SelectList(dateContext, "Date", "Date", date);
+            
+            // Sorts Types
+            var typeContext = _context.SittingTypes.OrderBy(st => st.Id);
+            ViewData["SittingTypeId"] = new SelectList(typeContext, "Id", "Name", sittingTypeId);
+
+            // We can't restrict the times to the sitting's timeframe here, we'll have to do it in the view
             ViewData["StartTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", startTimeId);
             ViewData["EndTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", endTimeId);
-            ViewData["SittingTypeId"] = new SelectList(_context.SittingTypes, "Id", "Name", sittingTypeId);
-            ViewData["Date"] = new SelectList(_context.Sittings, "Date", "Date", date);
+
+            // Sorts Areas
+            var areaContext = _context.Areas.OrderBy(a => a.Id);
+            ViewData["AreaId"] = new SelectList(areaContext, "Id", "Name", areaId);
+
+            // Users
             //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
         }
 
