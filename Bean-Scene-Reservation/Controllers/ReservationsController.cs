@@ -94,7 +94,7 @@ namespace Bean_Scene_Reservation.Controllers
             }
 
             // Check if the start and end time are within the sitting's time frame
-
+            
 
             if (ModelState.IsValid)
             {
