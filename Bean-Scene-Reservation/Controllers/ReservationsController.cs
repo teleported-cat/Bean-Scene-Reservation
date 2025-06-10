@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bean_Scene_Reservation.Data;
 using Bean_Scene_Reservation.Models;
+using System.Runtime.ExceptionServices;
 
 namespace Bean_Scene_Reservation.Controllers
 {
@@ -76,6 +77,14 @@ namespace Bean_Scene_Reservation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note,Status")] Reservation reservation)
         {
+            // Check if the sitting actually exists (remember, a sitting is a date PLUS a type)
+            // Without this check, we can select a non-existant type on an existing date, causing a SQL error
+            bool sittingExists = _context.Sittings
+                .Any(s => s.Date == reservation.Date && s.SittingTypeId == reservation.SittingTypeId);
+            if (!sittingExists)
+            {
+                ModelState.AddModelError("SittingTypeId", "Sorry, this sitting doesn't exist for this date.");
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(reservation);
