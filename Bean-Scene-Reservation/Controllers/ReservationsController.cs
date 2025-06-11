@@ -231,6 +231,47 @@ namespace Bean_Scene_Reservation.Controllers
             return View(reservation);
         }
 
+        // GET: Reservations/NewReservation
+        [HttpGet("Reservations/NewReservation")]
+        public IActionResult CustomerCreate()
+        {
+            PopulateViewData();
+            return View();
+        }
+
+        // POST: Reservations/NewReservation
+        [HttpPost("Reservations/NewReservation")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CustomerCreate([Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note")] Reservation reservation)
+        {
+            CheckReservationErrors(reservation);
+
+            if (ModelState.IsValid)
+            {
+                // Add status and source automatically
+                reservation.Status = Enum.Parse<Reservation.ReservationStatus>("Pending");
+                reservation.Source = Enum.Parse<Reservation.ReservationSource>("Online");
+
+                _context.Add(reservation);
+                await _context.SaveChangesAsync();
+
+                var sittingType = await _context.SittingTypes
+                    .Where(s => s.Id == reservation.SittingTypeId).FirstAsync();
+                string sittingName = sittingType.Name;
+                
+                var area = await _context.Areas.Where(a => a.Id == reservation.AreaId).FirstAsync();
+                string areaName = area.Name;
+
+                TempData["SuccessMessage"] = $"Your {sittingName} booking on {reservation.Date} has been placed.";
+                TempData["SuccessDetails"] = $"Your reservation will be from {reservation.StartTimeId} to {reservation.EndTimeId}, in the {areaName} area.";
+
+                return RedirectToAction(nameof(Index), "Home");
+            }
+
+            PopulateViewData(reservation);
+            return View(nameof(CustomerCreate), reservation);
+        }
+
         private bool ReservationExists(int id)
         {
             return _context.Reservations.Any(e => e.Id == id);

@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    bool isLoggedIn = SignInManager.IsSignedIn(User);
+}
+
+<div class="modal fade" id="successModal" tabindex="-1">
+    <div class="modal-dialog  modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Reservation Placed!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Success!</p>
+                    <p>@TempData["SuccessMessage"]</p>
+                    <p>@TempData["SuccessDetails"]</p>
+                    <p>We'll contact you a week before your reservation to confirm.</p>
+                @if (isLoggedIn)
+                {
+                    <p>You can always review your reservations in <a href="#">Reservation History.</a></p>
+                } else
+                {
+                    <p>Be sure to record these details so you don't forget!</p>
+                }
+            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var modal = new bootstrap.Modal(document.getElementById('successModal'));
+                modal.show();
+            });
+        </script>
+    }
