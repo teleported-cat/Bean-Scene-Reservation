@@ -1,0 +1,43 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    bool userIsMember = User.IsInRole("Member");
+    bool userIsStaff = User.IsInRole("Staff");
+    bool userIsManager = User.IsInRole("Manager");
+    bool isLoggedIn = SignInManager.IsSignedIn(User);
+
+    // DO NOT SET TO TRUE IN PRODUCTION
+    bool AuthOverride = false;
+}
+
+<ul class="navbar-nav flex-grow-1">
+    @* For every user *@
+    <partial name="_EveryRoleNavPartial" />
+
+    @* For Guests (no roles) + Members Only *@
+    @if (!userIsStaff || !userIsManager || AuthOverride)
+    {
+        <partial name="_GuestNavPartial" />
+    }
+
+    @* For Members Only *@
+    @if (userIsMember || AuthOverride)
+    {
+        <partial name="_MemberNavPartial" />
+    }
+    
+    @* For Staff Only *@
+    @if (userIsStaff || AuthOverride)
+    {
+        <partial name="_StaffNavPartial" />
+    }
+
+    @* For Managers Only *@
+    @if (userIsManager || AuthOverride)
+    {
+        <partial name="_ManagerNavPartial" />
+    }
+</ul>
+
+
