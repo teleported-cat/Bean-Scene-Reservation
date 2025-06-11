@@ -40,9 +40,9 @@ namespace Bean_Scene_Reservation.Data.Migrations
             CreateRole(_roleIds["Manager"], "Manager");
 
             // Add Users to the AspNetUsers table
-            CreateUser(_userIds["SeededMember"], "SeededMember", "Password123_", "example2@gmail.com", "Seedler", "McMember", null, [_roleIds["Member"]]);
-            CreateUser(_userIds["SeededStaff"], "SeededStaff", "Password123_", "example3@gmail.com", "Seedla", "Staffinton", null, [_roleIds["Staff"]]);
-            CreateUser(_userIds["SeededManager"], "SeededManager", "Password123_", "example4@gmail.com", "Sedro", "Managero", null, [_roleIds["Manager"], _roleIds["Staff"]]);
+            CreateUser(_userIds["SeededMember"], "seededmember@gmail.com", "Password123_", "seededmember@gmail.com", "Seedler", "McMember", null, [_roleIds["Member"]]);
+            CreateUser(_userIds["SeededStaff"], "seededstaff@gmail.com", "Password123_", "seededstaff@gmail.com", "Seedla", "Staffinton", null, [_roleIds["Staff"]]);
+            CreateUser(_userIds["SeededManager"], "seededmanager@gmail.com", "Password123_", "seededmanager@gmail.com", "Sedro", "Managero", null, [_roleIds["Manager"], _roleIds["Staff"]]);
         }
 
         /// <inheritdoc />
