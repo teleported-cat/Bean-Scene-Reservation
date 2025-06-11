@@ -31,10 +31,15 @@ namespace Bean_Scene_Reservation.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
+        // Adding role support (Assigning a default role to user on registration)
+        private readonly string _defaultUserRole = "Member";
+        private readonly RoleManager<IdentityRole> _roleManager;
+
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
+            RoleManager<IdentityRole> roleManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
@@ -42,6 +47,7 @@ namespace Bean_Scene_Reservation.Areas.Identity.Pages.Account
             _userStore = userStore;
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
+            _roleManager = roleManager;
             _logger = logger;
             _emailSender = emailSender;
         }
@@ -148,7 +154,13 @@ namespace Bean_Scene_Reservation.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    // TODO: Assign a default role
+                    var defaultRole = await _roleManager.FindByNameAsync(_defaultUserRole);
+                    if (defaultRole != null)
+                    {
+                        // Role exists, assign to user
+                        await _userManager.AddToRoleAsync(user, _defaultUserRole);
+                        _logger.LogInformation($"Role '{_defaultUserRole}' was assigned to new user account '{user.UserName}'.");
+                    }
 
                     // Send confirmation email
                     var userId = await _userManager.GetUserIdAsync(user);
