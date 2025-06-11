@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Bean_Scene_Reservation.Data;
 using Bean_Scene_Reservation.Models;
 using System.Runtime.ExceptionServices;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Bean_Scene_Reservation.Controllers
 {
@@ -60,12 +61,6 @@ namespace Bean_Scene_Reservation.Controllers
         // GET: Reservations/Create
         public IActionResult Create()
         {
-            //ViewData["AreaId"] = new SelectList(_context.Areas, "Id", "Name");
-            //ViewData["StartTimeId"] = new SelectList(_context.Timeslots, "Time", "Time");
-            //ViewData["EndTimeId"] = new SelectList(_context.Timeslots, "Time", "Time");
-            //ViewData["SittingId"] = new SelectList(_context.SittingTypes, "Id", "Name");
-            //ViewData["Date"] = new SelectList(_context.Sittings, "Date", "Date");
-            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             PopulateViewData();
             return View();
         }
@@ -75,41 +70,9 @@ namespace Bean_Scene_Reservation.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note,Status")] Reservation reservation)
+        public async Task<IActionResult> Create([Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note,Status,Source")] Reservation reservation)
         {
-            var sittings = _context.Sittings;
-
-            // Check if the sitting actually exists (remember, a sitting is a date PLUS a type)
-            // Without this check, we can select a non-existant type on an existing date, causing a SQL error
-            bool sittingExists = sittings
-                .Any(s => s.Date == reservation.Date && s.SittingTypeId == reservation.SittingTypeId);
-            if (!sittingExists)
-            {
-                ModelState.AddModelError("SittingTypeId", "Sorry, this sitting doesn't exist for this date.");
-            }
-
-            // Obviously check if the start time is after the end time
-            // Comparing using the timeslot's id is hacky... but smart
-            if (reservation.StartTimeId >= reservation.EndTimeId)
-            {
-                ModelState.AddModelError("StartTimeId", "The start time cannot be the same or after the end time.");
-            }
-
-            // Check if the start and end time are within the sitting's time frame
-            var sitting = sittings
-                .Where(s => s.Date == reservation.Date && s.SittingTypeId == reservation.SittingTypeId).First();
-            if (reservation.StartTimeId < sitting.StartTimeId)
-            {
-                ModelState.AddModelError("StartTimeId", "Sorry, this start time is before the sitting begins.");
-            }
-            if (reservation.EndTimeId > sitting.EndTimeId)
-            {
-                ModelState.AddModelError("EndTimeId", "Sorry, this end time is after the sitting ends.");
-            }
-
-            // Check if the reservation exceeds sitting max capacity
-            // (it should also count the number of reservations already in this sitting to prevent too many sittings)
-
+            CheckReservationErrors(reservation);
 
             if (ModelState.IsValid)
             {
@@ -117,10 +80,7 @@ namespace Bean_Scene_Reservation.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["AreaId"] = new SelectList(_context.Areas, "Id", "Name", reservation.AreaId);
-            //ViewData["EndTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", reservation.EndTimeId);
-            //ViewData["SittingTypeId"] = new SelectList(_context.SittingTypes, "Id", "Name", reservation.SittingTypeId);
-            //ViewData["StartTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", reservation.StartTimeId);
+
             PopulateViewData(reservation);
             return View(reservation);
         }
@@ -133,15 +93,14 @@ namespace Bean_Scene_Reservation.Controllers
                 return NotFound();
             }
 
-            var reservation = await _context.Reservations.FindAsync(id);
+            var reservation = await _context.Reservations
+                .FindAsync(id);
             if (reservation == null)
             {
                 return NotFound();
             }
-            ViewData["AreaId"] = new SelectList(_context.Areas, "Id", "Name", reservation.AreaId);
-            ViewData["EndTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", reservation.EndTimeId);
-            ViewData["SittingTypeId"] = new SelectList(_context.SittingTypes, "Id", "Name", reservation.SittingTypeId);
-            ViewData["StartTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", reservation.StartTimeId);
+
+            PopulateViewData(reservation);
             return View(reservation);
         }
 
@@ -150,12 +109,14 @@ namespace Bean_Scene_Reservation.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note,Status")] Reservation reservation)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note,Status,Source")] Reservation reservation)
         {
             if (id != reservation.Id)
             {
                 return NotFound();
             }
+
+            CheckReservationErrors(reservation);
 
             if (ModelState.IsValid)
             {
@@ -177,10 +138,7 @@ namespace Bean_Scene_Reservation.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AreaId"] = new SelectList(_context.Areas, "Id", "Name", reservation.AreaId);
-            ViewData["EndTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", reservation.EndTimeId);
-            ViewData["SittingTypeId"] = new SelectList(_context.SittingTypes, "Id", "Name", reservation.SittingTypeId);
-            ViewData["StartTimeId"] = new SelectList(_context.Timeslots, "Time", "Time", reservation.StartTimeId);
+            PopulateViewData(reservation);
             return View(reservation);
         }
 
@@ -194,9 +152,11 @@ namespace Bean_Scene_Reservation.Controllers
 
             var reservation = await _context.Reservations
                 .Include(r => r.Area)
+                .Include(r => r.StartTime)
                 .Include(r => r.EndTime)
                 .Include(r => r.Sitting)
-                .Include(r => r.StartTime)
+                .ThenInclude(s => s.SittingType)
+                //.Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (reservation == null)
             {
@@ -274,6 +234,55 @@ namespace Bean_Scene_Reservation.Controllers
             //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
         }
 
+        #endregion
+
+        #region ErrorChecking
+        private void CheckReservationErrors(Reservation reservation)
+        {
+            var sittings = _context.Sittings;
+            bool sittingExists = sittings
+                .Any(s => s.Date == reservation.Date && s.SittingTypeId == reservation.SittingTypeId);
+            var sitting = sittings
+                .Where(s => s.Date == reservation.Date && s.SittingTypeId == reservation.SittingTypeId).First();
+
+            // Check if the sitting actually exists (remember, a sitting is a date PLUS a type)
+            // Without this check, we can select a non-existant type on an existing date, causing a SQL error
+            if (!sittingExists)
+            {
+                ModelState.AddModelError("SittingTypeId", "Sorry, this sitting doesn't exist for this date.");
+            }
+
+            // Obviously check if the start time is after the end time
+            // Comparing using the timeslot's id is hacky... but smart
+            if (reservation.StartTimeId >= reservation.EndTimeId)
+            {
+                ModelState.AddModelError("StartTimeId", "The start time cannot be the same or after the end time.");
+            }
+
+            // Check if the start and end time are within the sitting's time frame
+            if (reservation.StartTimeId < sitting.StartTimeId)
+            {
+                ModelState.AddModelError("StartTimeId", "Sorry, this start time is before the sitting begins.");
+            }
+            if (reservation.EndTimeId > sitting.EndTimeId)
+            {
+                ModelState.AddModelError("EndTimeId", "Sorry, this end time is after the sitting ends.");
+            }
+
+            // Check if the reservation exceeds sitting max capacity
+            // (it should also count the number of reservations already in this sitting to prevent too many sittings)
+            if (reservation.NumberOfGuests > sitting.Capacity)
+            {
+                ModelState.AddModelError("NumberOfGuests", $"The number of guests exceed the sitting capacity of {sitting.Capacity}.");
+            }
+
+            // Give an error if both email and phone is empty
+            if (reservation.Email.IsNullOrEmpty() && reservation.Phone.IsNullOrEmpty())
+            {
+                ModelState.AddModelError("Email", "Both email & phone cannot be blank!");
+            }
+
+        }
         #endregion
     }
 }
