@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bean_Scene_Reservation.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         // Initialise the DbSets of all entities
         public DbSet<Area> Areas { get; set; }
