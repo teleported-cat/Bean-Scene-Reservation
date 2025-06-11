@@ -142,6 +142,30 @@ namespace Bean_Scene_Reservation.Controllers
             return View(reservation);
         }
 
+        // GET: Reservations/Edit/5/Confirmed
+        [HttpGet("Reservations/Edit/{id}/{status}")]
+        public async Task<IActionResult> Edit(int id, string status)
+        {
+            // Find a reservation
+            var reservation = await _context.Reservations.FindAsync(id);
+            if (reservation == null)
+                return NotFound("Reservation not found.");
+
+            // Validate status
+            if (!Enum.TryParse(status, out Reservation.ReservationStatus statusEnum))
+                return BadRequest("Invalid status.");
+
+            // Change the status
+            reservation.Status = statusEnum;
+
+            // Update the database
+            _context.Update(reservation);
+            await _context.SaveChangesAsync();
+
+            // Redirect to the Details view (pass through reservation ID)
+            return RedirectToAction(nameof(UpdateStatus), new { id = id });
+        }
+
         // GET: Reservations/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -158,6 +182,7 @@ namespace Bean_Scene_Reservation.Controllers
                 .ThenInclude(s => s.SittingType)
                 //.Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (reservation == null)
             {
                 return NotFound();
@@ -179,6 +204,31 @@ namespace Bean_Scene_Reservation.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Reservations/UpdateStatus/5
+        public async Task<IActionResult> UpdateStatus(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var reservation = await _context.Reservations
+                .Include(r => r.Area)
+                .Include(r => r.StartTime)
+                .Include(r => r.EndTime)
+                .Include(r => r.Sitting)
+                .ThenInclude(s => s.SittingType)
+                //.Include(r => r.User)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            return View(reservation);
         }
 
         private bool ReservationExists(int id)

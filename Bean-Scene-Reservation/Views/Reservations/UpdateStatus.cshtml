@@ -1,0 +1,49 @@
+﻿@model Bean_Scene_Reservation.Models.Reservation
+
+@{
+    ViewData["Title"] = "Update Status for Reservation No. " + Model.Id;
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>Click on a status to update the reservation.</p>
+
+@* Status buttons *@
+<div class="status-buttons mt-2 mb-4">
+    @foreach (var status in Enum.GetValues<Reservation.ReservationStatus>())
+    {
+        string cssActive = Model.Status == status ? "active" : "";
+        <a asp-action="Edit" asp-route-id="@Model.Id" asp-route-status="@status"
+           class="btn status-@status.ToString().ToLower() @cssActive"
+           title="Set status to @status">
+            @status
+        </a>
+    }
+</div>
+
+<div class="border-top pt-4">
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Sitting.SittingTypeId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Sitting.SittingType.Name)
+        </dd>
+    </dl>
+</div>
+
+<div class="border-top mt-4 pt-4">
+    <a asp-action="Index" class="btn btn-secondary" aria-label="Back">Back</a>
+</div>

@@ -170,3 +170,60 @@ a {
     background-color: var(--LightBlue-Hover);
     border-color: var(--LightBlue-Hover);
 }
+
+/*
+    Reservation status (table cells)
+*/
+
+.status-pending {
+    --color: #ff9900;
+    --icon: '\F5D4'; /* bi-three-dots */
+}
+
+.status-confirmed {
+    --color: #228855;
+    --icon: '\F272'; /* bi-check2 */
+}
+
+.status-inprogress {
+    --color: #1166ff;
+    --icon: '\F66B'; /* bi-activity */
+}
+
+.status-completed {
+    --color: #667777;
+    --icon: '\F26F'; /* bi-check2-all */
+}
+
+.status-cancelled {
+    --color: #dd3344;
+    --icon: '\F622'; /* bi-x-circle-fill */
+}
+
+/* Table styling */
+.status-td {
+    color: var(--color);
+    white-space: nowrap;
+}
+
+.status-td::before {
+    display: inline-block;
+    font-family: bootstrap-icons !important;
+    font-weight: 400 !important;
+    line-height: 1;
+    vertical-align: middle;
+    content: var(--icon, '\F50C'); /* Load a Bootstrap Icon - default to bi-question */
+}
+
+/* Button styling */
+.status-buttons .btn {
+    border: 1px solid var(--color);
+    color: var(--color);
+    /* Style the status button if it has the "active" class */
+    
+}
+
+.active {
+    background-color: var(--color);
+    color: white !important;
+}

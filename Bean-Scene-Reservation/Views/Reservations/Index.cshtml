@@ -79,6 +79,9 @@
                     @Html.DisplayFor(modelItem => item.Source)
                 </td>
                 <td class="text-end text-nowrap">
+                    <a class="btn btn-secondary" aria-label="Update Status" title="Update Status" asp-action="UpdateStatus" asp-route-id="@item.Id">
+                        <i class="bi bi-arrow-repeat"></i>
+                    </a>
                     <a class="btn btn-primary" aria-label="Details" title="Details" asp-action="Details" asp-route-id="@item.Id">
                         <i class="bi bi-search"></i>
                     </a>
