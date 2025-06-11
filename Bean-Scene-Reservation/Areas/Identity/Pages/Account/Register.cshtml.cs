@@ -71,6 +71,22 @@ namespace Bean_Scene_Reservation.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
+            // Adds support for first and last name
+            /// <summary>
+            ///     A custom input model for given/first names.
+            /// </summary>
+            [Required]
+            [StringLength(50, MinimumLength = 2, ErrorMessage = "Must be between 2-50 characters!")]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+            /// <summary>
+            ///     A custom input model for family/last names.
+            /// </summary>
+            [Required]
+            [StringLength(50, MinimumLength = 2, ErrorMessage = "Must be between 2-50 characters!")]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -113,16 +129,28 @@ namespace Bean_Scene_Reservation.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
+                // Create a new user
                 var user = CreateUser();
 
+                // Set first and last name
+                user.FirstName = Input.FirstName;
+                user.LastName = Input.LastName;
+
+                // Set other user information
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+
+                // Create the user
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
+                // Check if user is successfully created
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
 
+                    // TODO: Assign a default role
+
+                    // Send confirmation email
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
