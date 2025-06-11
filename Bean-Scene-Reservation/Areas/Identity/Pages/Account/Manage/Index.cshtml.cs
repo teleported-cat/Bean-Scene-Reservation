@@ -52,6 +52,22 @@ namespace Bean_Scene_Reservation.Areas.Identity.Pages.Account.Manage
         /// </summary>
         public class InputModel
         {
+            // Adds support for first and last name
+            /// <summary>
+            ///     A custom input model for given/first names.
+            /// </summary>
+            [Required]
+            [StringLength(50, MinimumLength = 2, ErrorMessage = "Must be between 2-50 characters!")]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+            /// <summary>
+            ///     A custom input model for family/last names.
+            /// </summary>
+            [Required]
+            [StringLength(50, MinimumLength = 2, ErrorMessage = "Must be between 2-50 characters!")]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -65,12 +81,16 @@ namespace Bean_Scene_Reservation.Areas.Identity.Pages.Account.Manage
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            string firstName = user.FirstName;
+            string lastName = user.LastName;
 
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                FirstName = firstName,
+                LastName = lastName
             };
         }
 
@@ -100,10 +120,44 @@ namespace Bean_Scene_Reservation.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
+            // Get first name from database
+            string firstName = user.FirstName;
+            // If what the user typed is the same as the database, don't update it
+            if (Input.FirstName != firstName)
+            {
+                // Update the value and get the status of the action
+                user.FirstName = Input.FirstName;
+                var setFirstNameResult = await _userManager.UpdateAsync(user);
+                // If it failed, display an error and refresh
+                if (!setFirstNameResult.Succeeded)
+                {
+                    StatusMessage = "Unexpected error when trying to set first name.";
+                    return RedirectToPage();
+                }
+            }
+            // Get last name from database
+            string lastName = user.LastName;
+            // If what the user typed is the same as the database, don't update it
+            if (Input.LastName != lastName)
+            {
+                // Update the value and get the status of the action
+                user.LastName = Input.LastName;
+                var setLastNameResult = await _userManager.UpdateAsync(user);
+                // If it failed, display an error and refresh
+                if (!setLastNameResult.Succeeded)
+                {
+                    StatusMessage = "Unexpected error when trying to set last name.";
+                    return RedirectToPage();
+                }
+            }
+            // Get phone number from database
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            // If what the user typed is the same as the database, don't update it
             if (Input.PhoneNumber != phoneNumber)
             {
+                // Update the value and get the status of the action
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
+                // If it failed, display an error and refresh
                 if (!setPhoneResult.Succeeded)
                 {
                     StatusMessage = "Unexpected error when trying to set phone number.";
