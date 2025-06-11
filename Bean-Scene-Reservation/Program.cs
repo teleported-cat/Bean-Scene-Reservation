@@ -1,4 +1,5 @@
 using Bean_Scene_Reservation.Data;
+using Bean_Scene_Reservation.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,16 +11,36 @@ namespace Bean_Scene_Reservation
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Logging providers
+            builder.Logging.ClearProviders();
+            builder.Logging.AddConsole();
+
+            // Add services to the container.
+
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            // Add Indentity support in out app (using our custom ApplicationUser class)
+            builder.Services.AddDefaultIdentity<ApplicationUser>(options => {
+                options.SignIn.RequireConfirmedAccount = true;
+
+                // Change password complexity requirements
+                options.Password.RequiredLength = 8;
+                //options.Password.RequireNonAlphanumeric = true;
+                //options.Password.RequireLowercase = true;
+                //options.Password.RequireUppercase = true;
+                //options.Password.RequireDigit = true;
+            })
+            .AddRoles<IdentityRole>() // Add support for roles 
+            .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            // Add other services
             builder.Services.AddControllersWithViews();
 
+            // Build the app
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
