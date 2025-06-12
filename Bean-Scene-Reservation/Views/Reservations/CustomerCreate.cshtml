@@ -10,8 +10,6 @@
     var user = await UserManager.GetUserAsync(User);
 
     // TODO: Figure out how to updates the correct types + times when a date is selected
-    // TODO: Automatically fill in personal information from user
-    // TODO: Calculate which tables a reservation will use and throw an error if there are not enough
 
 }
 
@@ -23,6 +21,10 @@
         <form asp-action="CustomerCreate">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row">
+                @if (isLoggedIn)
+                {
+                    <input asp-for="UserId" value="@user.Id" class="form-control" hidden />
+                } 
                 <div class="form-group col">
                     <label asp-for="Date" class="control-label"></label>
                     @* <input asp-for="Date" class="form-control" /> *@

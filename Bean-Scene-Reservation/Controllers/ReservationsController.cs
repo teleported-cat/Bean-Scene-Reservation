@@ -29,8 +29,9 @@ namespace Bean_Scene_Reservation.Controllers
                 .Include(r => r.StartTime)
                 .Include(r => r.EndTime)
                 .Include(r => r.Sitting)
-                .ThenInclude(s => s.SittingType);
-                //.Include(r => r.User)
+                .ThenInclude(s => s.SittingType)
+                .Include(r => r.User)
+                .OrderByDescending(r => r.Date);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -49,7 +50,7 @@ namespace Bean_Scene_Reservation.Controllers
                 .Include(r => r.Sitting)
                 .ThenInclude(s => s.SittingType)
                 .Include(s => s.Table)
-                //.Include(r => r.User)
+                .Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (reservation == null)
             {
@@ -71,7 +72,7 @@ namespace Bean_Scene_Reservation.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note,Status,Source")] Reservation reservation)
+        public async Task<IActionResult> Create([Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note,Status,Source,UserId")] Reservation reservation)
         {
             CheckReservationErrors(reservation);
 
@@ -115,7 +116,7 @@ namespace Bean_Scene_Reservation.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note,Status,Source")] Reservation reservation)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note,Status,Source,UserId")] Reservation reservation)
         {
             if (id != reservation.Id)
             {
@@ -123,8 +124,6 @@ namespace Bean_Scene_Reservation.Controllers
             }
 
             CheckReservationErrors(reservation);
-
-            // TODO: FIX IMMEDIATELY!!!!
             
             if (ModelState.IsValid)
             {
@@ -160,6 +159,7 @@ namespace Bean_Scene_Reservation.Controllers
                 existingReservation.Note = reservation.Note;
                 existingReservation.Status = reservation.Status;
                 existingReservation.Source = reservation.Source;
+                existingReservation.UserId = reservation.UserId;
 
                 // Clear existing tables
                 existingReservation.Table.Clear();
@@ -295,7 +295,7 @@ namespace Bean_Scene_Reservation.Controllers
         // POST: Reservations/NewReservation
         [HttpPost("Reservations/NewReservation")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CustomerCreate([Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note")] Reservation reservation)
+        public async Task<IActionResult> CustomerCreate([Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note,UserId")] Reservation reservation)
         {
             CheckReservationErrors(reservation);
 
@@ -350,7 +350,6 @@ namespace Bean_Scene_Reservation.Controllers
                 reservation.EndTimeId, 
                 reservation.SittingTypeId, 
                 reservation.Date
-                //reservation.UserId
                 );
         }
         private void PopulateViewData(
@@ -359,7 +358,6 @@ namespace Bean_Scene_Reservation.Controllers
             TimeOnly? endTimeId = null,
             int? sittingTypeId = null,
             DateOnly? date = null
-            //int? userId = null
             )
         {
             // Only select dates in the future, open, and prevent duplicate values
@@ -380,9 +378,6 @@ namespace Bean_Scene_Reservation.Controllers
             // Sorts Areas
             var areaContext = _context.Areas.OrderBy(a => a.Id);
             ViewData["AreaId"] = new SelectList(areaContext, "Id", "Name", areaId);
-
-            // Users
-            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
         }
 
         #endregion
