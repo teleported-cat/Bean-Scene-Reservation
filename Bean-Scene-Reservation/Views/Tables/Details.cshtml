@@ -1,0 +1,57 @@
+﻿@model Bean_Scene_Reservation.Models.Table;
+
+@{
+    ViewData["Title"] = "Table " + Model.TableNumber + " Details";
+
+    var reservationDates = Model.Reservations.Select(t => t.Date).ToList();
+    var reservationTypes = Model.Reservations.Select(t => t.Sitting.SittingType.Name).ToList();
+    var reservationNames = new List<string>();
+
+    for (int i = 0; i < reservationDates.Count; i++)
+    {
+        reservationNames.Add(reservationDates[i] + " " + reservationTypes[i]);
+    }
+}
+
+<h1 class="open-sans">@ViewData["Title"]</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TableNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TableNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AreaId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Area.Name)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Reservations)
+        </dt>
+        <dd class="col-sm-10">
+            @if (reservationDates.Count == 0)
+            {
+                @:(No Reservations)
+            }
+            else
+            {
+                @String.Join(", ", reservationNames)
+            }
+        </dd>
+    </dl>
+</div>
+
+<div class="form-group border-top mt-4 pt-4">
+    <a asp-action="Index" class="btn btn-secondary" title="Back" aria-label="Back">Back</a>
+</div>

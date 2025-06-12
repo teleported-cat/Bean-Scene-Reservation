@@ -36,7 +36,10 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Area.Name)
                 </td>
-                <td class="text-end">
+                <td class="text-end text-nowrap">
+                    <a class="btn btn-primary" aria-label="Details" title="Details" asp-action="Details" asp-route-id="@item.TableNumber">
+                        <i class="bi bi-search"></i>
+                    </a>
                     <a class="btn btn-secondary" aria-label="Edit" title="Edit" asp-action="Edit" asp-route-id="@item.TableNumber">
                         <i class="bi bi-pencil"></i>
                     </a>

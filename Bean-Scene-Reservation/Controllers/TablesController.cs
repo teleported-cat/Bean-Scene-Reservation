@@ -26,6 +26,29 @@ namespace Bean_Scene_Reservation.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+        // GET: Tables/Details/M1
+        [HttpGet("Tables/Details/{tableNumber}")]
+        public async Task<IActionResult> Details(string? tableNumber)
+        {
+            if (tableNumber == null)
+            {
+                return NotFound("This table number doesn't exist.");
+            }
+
+            var table = await _context.Tables
+                .Include(t => t.Area)
+                .Include(t => t.Reservations)
+                .ThenInclude(r => r.Sitting)
+                .ThenInclude(s => s.SittingType)
+                .FirstOrDefaultAsync(m => m.TableNumber == tableNumber);
+            if (table == null)
+            {
+                return NotFound("Table doesn't exist.");
+            }
+
+            return View(table);
+        }
+
         // GET: Tables/Create
         public IActionResult Create()
         {
