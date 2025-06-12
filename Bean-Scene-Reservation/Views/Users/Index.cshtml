@@ -1,7 +1,160 @@
-﻿@model IEnumerable<Bean_Scene_Reservation.Models.ApplicationUser>
+﻿@model IEnumerable<Bean_Scene_Reservation.Controllers.UsersController.UserWithRolesDto>
 
 @{
-    ViewData["Title"] = "Manage Reservations";
+    ViewData["Title"] = "Manage Users";
 }
 
 <h1 class="open-sans">@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary" aria-label="Add User" title="Add User">
+        <i class="bi-plus-circle"></i>
+        Add User
+    </a>
+</p>
+
+<h2>Members</h2>
+
+<div class="table-responsive">
+    <table class="table align-middle">
+        <caption>A list of all members in Bean Scene</caption>
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FullName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Phone)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Roles)
+                </th>
+                <th aria-label="Actions: Details, Edit, Delete"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                @if (item.Roles.Contains("Member") || item.Roles.Count == 0)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @if (String.IsNullOrEmpty(item.Phone))
+                            {
+                                @:(No Phone No.)
+                            } else {
+                                @Html.DisplayFor(modelItem => item.Phone)
+                            }
+                        </td>
+                        <td>
+                            @if (item.Roles.Count == 0)
+                            {
+                                @:(No Roles)
+                            } else
+                            {
+                                @string.Join(", ", item.Roles)
+                            }
+                        </td>
+                        <td class="text-end text-nowrap">
+                            <a class="btn btn-primary" aria-label="Details" title="Details" asp-action="Details" asp-route-id="@item.Id">
+                                <i class="bi bi-search"></i>
+                            </a>
+                            <a class="btn btn-secondary" aria-label="Edit" title="Edit" asp-action="Edit" asp-route-id="@item.Id">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a class="btn btn-danger" aria-label="Delete" title="Delete" asp-action="Delete" asp-route-id="@item.Id">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<h2>Staff</h2>
+
+<div class="table-responsive">
+    <table class="table align-middle">
+        <caption>A list of all staff in Bean Scene</caption>
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FullName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Phone)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Roles)
+                </th>
+                <th aria-label="Actions: Details, Edit, Delete"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                @if (item.Roles.Contains("Staff") || item.Roles.Contains("Manager"))
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @if (String.IsNullOrEmpty(item.Phone))
+                            {
+                                @:(No Phone No.)
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => item.Phone)
+                            }
+                        </td>
+                        <td>
+                            @string.Join(", ", item.Roles)
+                        </td>
+                        <td class="text-end text-nowrap">
+                            <a class="btn btn-primary" aria-label="Details" title="Details" asp-action="Details" asp-route-id="@item.Id">
+                                <i class="bi bi-search"></i>
+                            </a>
+                            <a class="btn btn-secondary" aria-label="Edit" title="Edit" asp-action="Edit" asp-route-id="@item.Id">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a class="btn btn-danger" aria-label="Delete" title="Delete" asp-action="Delete" asp-route-id="@item.Id">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
