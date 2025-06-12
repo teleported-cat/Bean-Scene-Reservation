@@ -115,7 +115,7 @@ namespace Bean_Scene_Reservation.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note,Status,Source")] Reservation reservation)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note,Status,Source,Table")] Reservation reservation)
         {
             if (id != reservation.Id)
             {
@@ -123,6 +123,20 @@ namespace Bean_Scene_Reservation.Controllers
             }
 
             CheckReservationErrors(reservation);
+
+            // TODO: FIX IMMEDIATELY!!!!
+            
+            if (ModelState.IsValid)
+            {
+                //var oldReservation = reservations.Where(r => r.Id == reservation.Id).First();
+                //var oldTables = oldReservation.Table;
+                //oldTables.Clear();
+
+                var openTables = TablesLeftInSittingEdit(reservation);
+                ClearOldTables(reservation);
+                AssignTables(reservation, openTables);
+            }
+            
 
             if (ModelState.IsValid)
             {
@@ -414,6 +428,34 @@ namespace Bean_Scene_Reservation.Controllers
 
             return tablesWithoutReservations;
         }
+        private List<Table> TablesLeftInSittingEdit(Reservation reservation)
+        {
+            // Get a list of all reservations that:
+                // Are in the same sitting as this one
+                // Is in the same area as this one
+                // Isn't cancelled
+                // Doesn't include unedited reservation
+            var reservationsInSitting = _context.Reservations
+                .Where(r => r.Date == reservation.Date && r.SittingTypeId == reservation.SittingTypeId)
+                .Where(r => r.AreaId == reservation.AreaId)
+                .Where(r => r.Status != Enum.Parse<Reservation.ReservationStatus>("Cancelled"));
+
+            // Get a list of tables in the area chosen
+            var tablesInArea = _context.Tables.Where(t => t.AreaId == reservation.AreaId).ToList();
+
+            // Get a list of all tables from the reservation list above
+            var tablesForReservations = reservationsInSitting
+                .SelectMany(r => r.Table)
+                .Distinct()
+                .ToList();
+
+            // There shouldn't be any duplicates as the table assigning process prevents it
+
+            // Return a list of all tables NOT in use in this sitting + area
+            var tablesWithoutReservations = tablesInArea.Except(tablesForReservations).ToList();
+
+            return tablesWithoutReservations;
+        }
         private void AssignTables(Reservation reservation, List<Table> openTables)
         {
             // First calculate the number of tables required
@@ -433,6 +475,13 @@ namespace Bean_Scene_Reservation.Controllers
             {
                 reservation.Table.Add(openTables[i]);
             }
+        }
+        private void ClearOldTables(Reservation reservation)
+        {
+            // See if there is any tables associated with the old reservation
+            var oldTables = _context.Reservations.Where(r => r.Id == reservation.Id).First().Table;
+            // Delete them
+            oldTables.Clear();
         }
         #endregion
     }
