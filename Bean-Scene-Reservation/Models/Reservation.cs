@@ -11,10 +11,9 @@ namespace Bean_Scene_Reservation.Models
         [DisplayName("Reservation No.")]
         public int Id { get; set; }
 
-        // TODO: Add ApplicationUser foreign key!
-        //[StringLength(450)]
-        //[DisplayName("User")]
-        //public string? UserId { get; set; }
+        [StringLength(450)]
+        [DisplayName("User")]
+        public string? UserId { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
@@ -108,8 +107,8 @@ namespace Bean_Scene_Reservation.Models
         [DeleteBehavior(DeleteBehavior.Restrict)]
         public Area? Area { get; set; }
 
-        //[DeleteBehavior(DeleteBehavior.SetNull)]
-        //public ApplicationUser? User { get; set; }
+        [DeleteBehavior(DeleteBehavior.SetNull)]
+        public ApplicationUser? User { get; set; }
 
         // Define a many-to-many relationship between Reservation and Table (check the Table model)
         [DisplayName("Assigned Tables")]
