@@ -48,6 +48,7 @@ namespace Bean_Scene_Reservation.Controllers
                 .Include(r => r.EndTime)
                 .Include(r => r.Sitting)
                 .ThenInclude(s => s.SittingType)
+                .Include(s => s.Table)
                 //.Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (reservation == null)
@@ -73,6 +74,11 @@ namespace Bean_Scene_Reservation.Controllers
         public async Task<IActionResult> Create([Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note,Status,Source")] Reservation reservation)
         {
             CheckReservationErrors(reservation);
+
+            if (ModelState.IsValid) {
+                var openTables = TablesLeftInSitting(reservation);
+                AssignTables(reservation, openTables);
+            }
 
             if (ModelState.IsValid)
             {
@@ -248,6 +254,12 @@ namespace Bean_Scene_Reservation.Controllers
 
             if (ModelState.IsValid)
             {
+                var openTables = TablesLeftInSitting(reservation);
+                AssignTables(reservation, openTables);
+            }
+
+            if (ModelState.IsValid)
+            {
                 // Add status and source automatically
                 reservation.Status = Enum.Parse<Reservation.ReservationStatus>("Pending");
                 reservation.Source = Enum.Parse<Reservation.ReservationSource>("Online");
@@ -255,6 +267,7 @@ namespace Bean_Scene_Reservation.Controllers
                 _context.Add(reservation);
                 await _context.SaveChangesAsync();
 
+                // For Success Message
                 var sittingType = await _context.SittingTypes
                     .Where(s => s.Id == reservation.SittingTypeId).FirstAsync();
                 string sittingName = sittingType.Name;
@@ -327,7 +340,7 @@ namespace Bean_Scene_Reservation.Controllers
 
         #endregion
 
-        #region ErrorChecking
+        #region ReservationChecking
         private void CheckReservationErrors(Reservation reservation)
         {
             var sittings = _context.Sittings;
@@ -373,6 +386,53 @@ namespace Bean_Scene_Reservation.Controllers
                 ModelState.AddModelError("Email", "Both email & phone cannot be blank!");
             }
 
+        }
+        private List<Table> TablesLeftInSitting(Reservation reservation)
+        {
+            // Get a list of all reservations that:
+                // Are in the same sitting as this one
+                // Is in the same area as this one
+                // Isn't cancelled
+            var reservationsInSitting = _context.Reservations
+                .Where(r => r.Date == reservation.Date && r.SittingTypeId == reservation.SittingTypeId)
+                .Where(r => r.AreaId == reservation.AreaId)
+                .Where(r => r.Status != Enum.Parse<Reservation.ReservationStatus>("Cancelled"));
+
+            // Get a list of tables in the area chosen
+            var tablesInArea = _context.Tables.Where(t => t.AreaId == reservation.AreaId).ToList();
+
+            // Get a list of all tables from the reservation list above
+            var tablesForReservations = reservationsInSitting
+                .SelectMany(r => r.Table)
+                .Distinct()
+                .ToList();
+
+            // There shouldn't be any duplicates as the table assigning process prevents it
+
+            // Return a list of all tables NOT in use in this sitting + area
+            var tablesWithoutReservations = tablesInArea.Except(tablesForReservations).ToList();
+
+            return tablesWithoutReservations;
+        }
+        private void AssignTables(Reservation reservation, List<Table> openTables)
+        {
+            // First calculate the number of tables required
+            // Operation: tr = ceil(numOfGuests / 4)
+            int tablesRequired = (int)Math.Ceiling(reservation.NumberOfGuests / 4m);
+
+            // Check if there are enough tables left
+            bool isSpaceForReservation = tablesRequired <= openTables.Count;
+            if (!isSpaceForReservation) {
+                // ERROR! Not enough tables left!
+                ModelState.AddModelError("NumberOfGuests", "Sorry, there are not enough tables to sit these guests (" + openTables.Count + " tables left in this sitting).");
+                return;
+            }
+
+            // Assign some tables
+            for (int i = 0; i < tablesRequired; i++)
+            {
+                reservation.Table.Add(openTables[i]);
+            }
         }
         #endregion
     }
