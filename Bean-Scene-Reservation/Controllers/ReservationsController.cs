@@ -115,7 +115,7 @@ namespace Bean_Scene_Reservation.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note,Status,Source,Table")] Reservation reservation)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note,Status,Source")] Reservation reservation)
         {
             if (id != reservation.Id)
             {
@@ -132,9 +132,41 @@ namespace Bean_Scene_Reservation.Controllers
                 //var oldTables = oldReservation.Table;
                 //oldTables.Clear();
 
-                var openTables = TablesLeftInSittingEdit(reservation);
-                ClearOldTables(reservation);
-                AssignTables(reservation, openTables);
+                //var openTables = TablesLeftInSittingEdit(reservation);
+                //ClearOldTables(reservation);
+                //AssignTables(reservation, openTables);
+
+                // FIXED: Load the existing reservation with its tables from the database
+                var existingReservation = await _context.Reservations
+                    .Include(r => r.Table)
+                    .FirstOrDefaultAsync(r => r.Id == reservation.Id);
+
+                if (existingReservation == null)
+                {
+                    return NotFound();
+                }
+
+                // Update the existing reservation's properties with the new values
+                existingReservation.Date = reservation.Date;
+                existingReservation.SittingTypeId = reservation.SittingTypeId;
+                existingReservation.StartTimeId = reservation.StartTimeId;
+                existingReservation.EndTimeId = reservation.EndTimeId;
+                existingReservation.AreaId = reservation.AreaId;
+                existingReservation.NumberOfGuests = reservation.NumberOfGuests;
+                existingReservation.FirstName = reservation.FirstName;
+                existingReservation.LastName = reservation.LastName;
+                existingReservation.Email = reservation.Email;
+                existingReservation.Phone = reservation.Phone;
+                existingReservation.Note = reservation.Note;
+                existingReservation.Status = reservation.Status;
+                existingReservation.Source = reservation.Source;
+
+                // Clear existing tables
+                existingReservation.Table.Clear();
+
+                // Get open tables and assign new ones
+                var openTables = TablesLeftInSittingEdit(existingReservation);
+                AssignTables(existingReservation, openTables);
             }
             
 
@@ -142,7 +174,8 @@ namespace Bean_Scene_Reservation.Controllers
             {
                 try
                 {
-                    _context.Update(reservation);
+                    //_context.Update(reservation);
+                    //await _context.SaveChangesAsync();
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -438,7 +471,8 @@ namespace Bean_Scene_Reservation.Controllers
             var reservationsInSitting = _context.Reservations
                 .Where(r => r.Date == reservation.Date && r.SittingTypeId == reservation.SittingTypeId)
                 .Where(r => r.AreaId == reservation.AreaId)
-                .Where(r => r.Status != Enum.Parse<Reservation.ReservationStatus>("Cancelled"));
+                .Where(r => r.Status != Enum.Parse<Reservation.ReservationStatus>("Cancelled"))
+                .Where(r => r.Id != reservation.Id);
 
             // Get a list of tables in the area chosen
             var tablesInArea = _context.Tables.Where(t => t.AreaId == reservation.AreaId).ToList();
