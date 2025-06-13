@@ -1,0 +1,86 @@
+﻿@model IEnumerable<Bean_Scene_Reservation.Models.Table>
+
+@{
+    ViewData["Title"] = "Current Table Utilisation";
+
+    // Get areas
+    var areas = ViewBag.Areas;
+
+    // Get sitting types
+    var sittingTypes = ViewBag.SittingTypes;
+
+    // Todays date
+    var today = DateOnly.FromDateTime(DateTime.Today);
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h2>(For Today: @today)</h2>
+
+@foreach (var type in sittingTypes)
+{
+    <hr />
+    <h3>@(type.Name)</h3>
+
+    <div class="row gap-1">
+        @foreach (var area in areas)
+        {
+            <div class="card col">
+                <div class="card-body">
+                    <h5 class="card-title">@(area.Name) Area</h5>
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Table No.
+                                    </th>
+                                    <th class="text-end">
+                                        Status
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    @if (item.AreaId == area.Id)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @item.TableNumber
+                                            </td>
+                                            <td class="text-end">
+                                                @{
+                                                    var reservations = item.Reservations.Where(r => r.Date == today && r.SittingTypeId == type.Id);
+                                                    var dates = reservations.Select(r => r.Date);
+                                                    var types = reservations.Select(r => r.Sitting).Select(s => s.SittingType).Select(st => st.Name);
+
+                                                    // Join the two lists into one
+                                                    var combined = dates.Zip(types, (date, name) => $"{date} {name}").ToList();
+                                                    var output = string.Join(", ", combined);
+                                                }
+                                                @if (combined.Count == 0)
+                                                {
+                                                    <em>Empty</em>
+                                                } else
+                                                {
+                                                    foreach(var r in reservations)
+                                                    {
+                                                        <a aria-label="Details" title="Details" asp-controller="Reservations" asp-action="Details" asp-route-id="@r.Id">
+                                                            @output
+                                                        </a>
+                                                    }
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        }
+    </div>
+}
