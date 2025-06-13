@@ -1,5 +1,6 @@
 ﻿using Bean_Scene_Reservation.Data;
 using Bean_Scene_Reservation.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ namespace Bean_Scene_Reservation.Controllers
         }
 
         // GET: Reservations
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Reservations
@@ -40,6 +42,7 @@ namespace Bean_Scene_Reservation.Controllers
         }
 
         // GET: Reservations/Details/5
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -66,6 +69,7 @@ namespace Bean_Scene_Reservation.Controllers
         }
 
         // GET: Reservations/Create
+        [Authorize(Roles = "Manager")]
         public IActionResult Create()
         {
             PopulateViewData();
@@ -78,6 +82,7 @@ namespace Bean_Scene_Reservation.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Create([Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note,Status,Source,UserId")] Reservation reservation)
         {
             CheckReservationErrors(reservation);
@@ -100,6 +105,7 @@ namespace Bean_Scene_Reservation.Controllers
         }
 
         // GET: Reservations/Edit/5
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -123,6 +129,7 @@ namespace Bean_Scene_Reservation.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note,Status,Source,UserId")] Reservation reservation)
         {
             if (id != reservation.Id)
@@ -204,6 +211,7 @@ namespace Bean_Scene_Reservation.Controllers
 
         // GET: Reservations/Edit/5/Confirmed
         [HttpGet("Reservations/Edit/{id}/{status}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(int id, string status)
         {
             // Find a reservation
@@ -228,6 +236,7 @@ namespace Bean_Scene_Reservation.Controllers
         }
 
         // GET: Reservations/Delete/5
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -255,6 +264,7 @@ namespace Bean_Scene_Reservation.Controllers
         // POST: Reservations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var reservation = await _context.Reservations.FindAsync(id);
@@ -268,6 +278,7 @@ namespace Bean_Scene_Reservation.Controllers
         }
 
         // GET: Reservations/UpdateStatus/5
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> UpdateStatus(int? id)
         {
             if (id == null)
@@ -293,6 +304,7 @@ namespace Bean_Scene_Reservation.Controllers
             return View(reservation);
         }
 
+        #region GuestViews
         // GET: Reservations/NewReservation
         [HttpGet("Reservations/NewReservation")]
         public IActionResult CustomerCreate()
@@ -300,7 +312,7 @@ namespace Bean_Scene_Reservation.Controllers
             PopulateViewData();
             return View();
         }
-
+        
         // POST: Reservations/NewReservation
         [HttpPost("Reservations/NewReservation")]
         [ValidateAntiForgeryToken]
@@ -340,9 +352,12 @@ namespace Bean_Scene_Reservation.Controllers
             PopulateViewData(reservation);
             return View(nameof(CustomerCreate), reservation);
         }
+        #endregion
 
+        #region MemberViews
         // GET: Reservations/ReservationHistory
         [HttpGet("Reservations/ReservationHistory")]
+        [Authorize(Roles = "Member")]
         public async Task<IActionResult> CustomerView()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -363,9 +378,12 @@ namespace Bean_Scene_Reservation.Controllers
                 .OrderByDescending(r => r.Date);
             return View(await applicationDbContext.ToListAsync());
         }
+        #endregion
 
+        #region StaffViews
         // GET: Reservations/CaptureReservation
         [HttpGet("Reservations/CaptureReservation")]
+        [Authorize(Roles = "Staff, Manager")]
         public IActionResult CaptureReservation()
         {
             PopulateViewData();
@@ -376,6 +394,7 @@ namespace Bean_Scene_Reservation.Controllers
         // POST: Reservations/CaptureReservation
         [HttpPost("Reservations/CaptureReservation")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Staff, Manager")]
         public async Task<IActionResult> CaptureReservation([Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note,Status,Source,UserId")] Reservation reservation)
         {
             CheckReservationErrors(reservation);
@@ -400,6 +419,7 @@ namespace Bean_Scene_Reservation.Controllers
 
         // GET: Reservations/UpcomingReservations
         [HttpGet("Reservations/UpcomingReservations")]
+        [Authorize(Roles = "Staff, Manager")]
         public async Task<IActionResult> UpcomingReservations()
         {
             var applicationDbContext = _context.Reservations
@@ -416,6 +436,7 @@ namespace Bean_Scene_Reservation.Controllers
 
         // GET: Reservations/UpcomingReservations/Details/5
         [HttpGet("Reservations/UpcomingReservations/Details/{id}")]
+        [Authorize(Roles = "Staff, Manager")]
         public async Task<IActionResult> UpcomingDetails(int? id)
         {
             if (id == null)
@@ -443,6 +464,7 @@ namespace Bean_Scene_Reservation.Controllers
 
         // GET: Reservations/UpcomingReservations/UpdateStatus/5
         [HttpGet("Reservations/UpcomingReservations/UpdateStatus/{id}")]
+        [Authorize(Roles = "Staff, Manager")]
         public async Task<IActionResult> UpcomingUpdateStatus(int? id)
         {
             if (id == null)
@@ -470,6 +492,7 @@ namespace Bean_Scene_Reservation.Controllers
 
         // GET: Reservations/Edit/5/Confirmed
         [HttpGet("Reservations/UpcomingReservations/Edit/{id}/{status}")]
+        [Authorize(Roles = "Staff, Manager")]
         public async Task<IActionResult> EditUpcoming(int id, string status)
         {
             // Find a reservation
@@ -492,6 +515,7 @@ namespace Bean_Scene_Reservation.Controllers
             TempData["isStaff"] = true;
             return RedirectToAction(nameof(UpcomingUpdateStatus), new { id = id });
         }
+        #endregion
 
         private bool ReservationExists(int id)
         {

@@ -99,7 +99,13 @@
             </div>
             <div class="form-group border-top mt-4 pt-4">
                 <input type="submit" value="Create" class="btn btn-primary" aria-label="Create" />
-                <a asp-action="Index" class="btn btn-secondary" aria-label="Cancel">Cancel</a>
+                @if (!isCapture)
+                {
+                    <a asp-action="Index" class="btn btn-secondary" aria-label="Cancel">Cancel</a>
+                } else
+                {
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary" aria-label="Cancel">Cancel</a>
+                }
             </div>
         </form>
     </div>

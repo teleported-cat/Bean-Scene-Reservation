@@ -8,7 +8,7 @@
     bool isLoggedIn = SignInManager.IsSignedIn(User);
 
     // DO NOT SET TO TRUE IN PRODUCTION
-    bool AuthOverride = true;
+    bool AuthOverride = false;
 }
 
 <ul class="navbar-nav flex-grow-1">
@@ -16,7 +16,7 @@
     <partial name="_EveryRoleNavPartial" />
 
     @* For Guests (no roles) + Members Only *@
-    @if (!userIsStaff || !userIsManager || AuthOverride)
+    @if (!userIsStaff || AuthOverride)
     {
         <partial name="_GuestNavPartial" />
     }

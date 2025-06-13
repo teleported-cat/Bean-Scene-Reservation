@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Bean_Scene_Reservation.Data;
+using Bean_Scene_Reservation.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Bean_Scene_Reservation.Data;
-using Bean_Scene_Reservation.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Bean_Scene_Reservation.Controllers
 {
+    [Authorize(Roles = "Manager")]
     public class TablesController : Controller
     {
         private readonly ApplicationDbContext _context;

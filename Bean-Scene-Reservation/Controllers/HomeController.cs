@@ -1,6 +1,7 @@
-using System.Diagnostics;
 using Bean_Scene_Reservation.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace Bean_Scene_Reservation.Controllers
 {
@@ -23,6 +24,7 @@ namespace Bean_Scene_Reservation.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Manager")]
         public IActionResult ManagerPortal()
         {
             return View();

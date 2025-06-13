@@ -1,9 +1,11 @@
 ﻿using Bean_Scene_Reservation.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bean_Scene_Reservation.Controllers
 {
+    [Authorize(Roles = "Manager")]
     public class ReportsController : Controller
     {
         private readonly ApplicationDbContext _context;

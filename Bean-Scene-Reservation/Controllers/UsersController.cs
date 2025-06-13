@@ -1,5 +1,6 @@
 ﻿using Bean_Scene_Reservation.Data;
 using Bean_Scene_Reservation.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using System.Security;
 
 namespace Bean_Scene_Reservation.Controllers
 {
+    [Authorize(Roles = "Manager")]
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _context;

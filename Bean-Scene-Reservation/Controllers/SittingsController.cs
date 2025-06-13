@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Bean_Scene_Reservation.Data;
+using Bean_Scene_Reservation.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Bean_Scene_Reservation.Data;
-using Bean_Scene_Reservation.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Bean_Scene_Reservation.Controllers
 {
+    [Authorize(Roles = "Manager")]
     public class SittingsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -26,7 +28,8 @@ namespace Bean_Scene_Reservation.Controllers
                 .Include(s => s.EndTime)
                 .Include(s => s.SittingType)
                 .Include(s => s.StartTime)
-                .Include(s => s.SittingSchedule);
+                .Include(s => s.SittingSchedule)
+                .OrderByDescending(s => s.Date);
             return View(await applicationDbContext.ToListAsync());
         }
 
