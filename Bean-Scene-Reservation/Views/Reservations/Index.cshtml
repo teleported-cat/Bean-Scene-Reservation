@@ -1,99 +1,277 @@
 ﻿@model IEnumerable<Bean_Scene_Reservation.Models.Reservation>
 
 @{
-    ViewData["Title"] = "Manage Reservations";
+    bool isStaff = (bool)TempData["isStaff"];
+    @if (isStaff) {
+        ViewData["Title"] = "View Reservations";
+    } else {
+        ViewData["Title"] = "Manage Reservations";
+    }
 }
 
 <h1 class="open-sans">@ViewData["Title"]</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary" aria-label="Add Reservation" title="Add Reservation">
-        <i class="bi-plus-circle"></i>
-        Add Reservation
-    </a>
-</p>
+@if (!isStaff)
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary" aria-label="Add Reservation" title="Add Reservation">
+            <i class="bi-plus-circle"></i>
+            Add Reservation
+        </a>
+    </p>
 
-<div class="table-responsive">
-    <table class="table align-middle">
-        <caption>A list of all Reservations in Bean Scene</caption>
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Id)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Date)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Sitting.SittingTypeId)
-                </th>
-                <th>
-                    Reservation Times
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.AreaId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.NumberOfGuests)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FullName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Status)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Source)
-                </th>
-                <th aria-label="Actions: Details, Edit, Delete"></th>
-            </tr>
-        </thead>
-        <tbody>
-    @foreach (var item in Model) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Date)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Sitting.SittingType.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StartTimeId) - @Html.DisplayFor(modelItem => item.EndTimeId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Area.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumberOfGuests)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FullName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Source)
-                </td>
-                <td class="text-end text-nowrap">
-                    <a class="btn btn-secondary" aria-label="Update Status" title="Update Status" asp-action="UpdateStatus" asp-route-id="@item.Id">
-                        <i class="bi bi-arrow-repeat"></i>
-                    </a>
-                    <a class="btn btn-primary" aria-label="Details" title="Details" asp-action="Details" asp-route-id="@item.Id">
-                        <i class="bi bi-search"></i>
-                    </a>
-                    <a class="btn btn-secondary" aria-label="Edit" title="Edit" asp-action="Edit" asp-route-id="@item.Id">
-                        <i class="bi bi-pencil"></i>
-                    </a>
-                    <a class="btn btn-danger" aria-label="Delete" title="Delete" asp-action="Delete" asp-route-id="@item.Id">
-                        <i class="bi bi-trash"></i>
-                    </a>
-                </td>
-            </tr>
-    }
-        </tbody>
-    </table>
-</div>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <caption>A list of all Reservations in Bean Scene</caption>
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Id)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Date)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Sitting.SittingTypeId)
+                    </th>
+                    <th>
+                        Reservation Times
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.AreaId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NumberOfGuests)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FullName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Source)
+                    </th>
+                    <th aria-label="Actions: Update Status, Details, Edit, Delete"></th>
+                </tr>
+            </thead>
+            <tbody>
+        @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Sitting.SittingType.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartTimeId) - @Html.DisplayFor(modelItem => item.EndTimeId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Area.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumberOfGuests)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Source)
+                    </td>
+                    <td class="text-end text-nowrap">
+                        <a class="btn btn-secondary" aria-label="Update Status" title="Update Status" asp-action="UpdateStatus" asp-route-id="@item.Id">
+                            <i class="bi bi-arrow-repeat"></i>
+                        </a>
+                        <a class="btn btn-primary" aria-label="Details" title="Details" asp-action="Details" asp-route-id="@item.Id">
+                            <i class="bi bi-search"></i>
+                        </a>
+                        <a class="btn btn-secondary" aria-label="Edit" title="Edit" asp-action="Edit" asp-route-id="@item.Id">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a class="btn btn-danger" aria-label="Delete" title="Delete" asp-action="Delete" asp-route-id="@item.Id">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+        }
+            </tbody>
+        </table>
+    </div>
+} else
+{
+    <h2>Upcoming Reservations</h2>
+
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <caption>A list of all upcoming Reservations in Bean Scene</caption>
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Id)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Date)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Sitting.SittingTypeId)
+                    </th>
+                    <th>
+                        Reservation Times
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.AreaId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NumberOfGuests)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FullName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Source)
+                    </th>
+                    <th aria-label="Actions: Update Status, Details"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    @if (item.Status != Enum.Parse<Reservation.ReservationStatus>("Cancelled") && item.Date >= DateOnly.FromDateTime(DateTime.Today))
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Date)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Sitting.SittingType.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StartTimeId) - @Html.DisplayFor(modelItem => item.EndTimeId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Area.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumberOfGuests)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FullName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Source)
+                            </td>
+                            <td class="text-end text-nowrap">
+                                <a class="btn btn-secondary" aria-label="Update Status" title="Update Status" asp-action="UpcomingUpdateStatus" asp-route-id="@item.Id">
+                                    <i class="bi bi-arrow-repeat"></i>
+                                </a>
+                                <a class="btn btn-primary" aria-label="Details" title="Details" asp-action="UpcomingDetails" asp-route-id="@item.Id">
+                                    <i class="bi bi-search"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <h2>Previous & Cancelled Reservations</h2>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <caption>A list of all previous or cancelled Reservations in Bean Scene</caption>
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Id)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Date)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Sitting.SittingTypeId)
+                    </th>
+                    <th>
+                        Reservation Times
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.AreaId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NumberOfGuests)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FullName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Source)
+                    </th>
+                    <th aria-label="Actions: Update Status, Details"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    @if (item.Status == Enum.Parse<Reservation.ReservationStatus>("Cancelled") || item.Date < DateOnly.FromDateTime(DateTime.Today))
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Date)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Sitting.SittingType.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StartTimeId) - @Html.DisplayFor(modelItem => item.EndTimeId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Area.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumberOfGuests)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FullName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Source)
+                            </td>
+                            <td class="text-end text-nowrap">
+                                <a class="btn btn-secondary" aria-label="Update Status" title="Update Status" asp-action="UpdateStatus" asp-route-id="@item.Id">
+                                    <i class="bi bi-arrow-repeat"></i>
+                                </a>
+                                <a class="btn btn-primary" aria-label="Details" title="Details" asp-action="UpcomingDetails" asp-route-id="@item.Id">
+                                    <i class="bi bi-search"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}

@@ -1,6 +1,8 @@
 ﻿@model Bean_Scene_Reservation.Models.Reservation
 
 @{
+    bool isStaff = (bool)TempData["isStaff"];
+
     ViewData["Title"] = "Update Status for Reservation No. " + Model.Id;
 }
 
@@ -13,7 +15,7 @@
     @foreach (var status in Enum.GetValues<Reservation.ReservationStatus>())
     {
         string cssActive = Model.Status == status ? "active" : "";
-        <a asp-action="Edit" asp-route-id="@Model.Id" asp-route-status="@status"
+        <a asp-action="@(isStaff ? "EditUpcoming" : "Edit")" asp-route-id="@Model.Id" asp-route-status="@status"
            class="btn status-@status.ToString().ToLower() @cssActive"
            title="Set status to @status">
             @status
@@ -44,6 +46,14 @@
     </dl>
 </div>
 
-<div class="border-top mt-4 pt-4">
-    <a asp-action="Index" class="btn btn-secondary" aria-label="Back">Back</a>
-</div>
+@if (!isStaff)
+{
+    <div class="border-top mt-4 pt-4">
+        <a asp-action="Index" class="btn btn-secondary" aria-label="Back">Back</a>
+    </div>
+} else
+{
+    <div class="border-top mt-4 pt-4">
+        <a asp-action="UpcomingReservations" class="btn btn-secondary" aria-label="Back">Back</a>
+    </div>
+}

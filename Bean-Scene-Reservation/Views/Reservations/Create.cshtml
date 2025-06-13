@@ -1,7 +1,14 @@
 ﻿@model Bean_Scene_Reservation.Models.Reservation
 
 @{
-    ViewData["Title"] = "Create New Reservation";
+    bool isCapture = (bool)TempData["isCapture"];
+    @if (isCapture)
+    {
+        ViewData["Title"] = "Capture Reservation";
+    } else
+    {
+        ViewData["Title"] = "Create New Reservation";
+    }
 
     // TODO: Figure out how to updates the correct types + times when a date is selected
 
@@ -12,7 +19,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="@(isCapture ? "CaptureReservation" : "Create")">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row">
                 <div class="form-group col">

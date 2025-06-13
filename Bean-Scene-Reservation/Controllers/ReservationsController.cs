@@ -35,6 +35,7 @@ namespace Bean_Scene_Reservation.Controllers
                 .ThenInclude(s => s.SittingType)
                 .Include(r => r.User)
                 .OrderByDescending(r => r.Date);
+            TempData["isStaff"] = false;
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -60,6 +61,7 @@ namespace Bean_Scene_Reservation.Controllers
                 return NotFound();
             }
 
+            TempData["isStaff"] = false;
             return View(reservation);
         }
 
@@ -67,6 +69,7 @@ namespace Bean_Scene_Reservation.Controllers
         public IActionResult Create()
         {
             PopulateViewData();
+            TempData["isCapture"] = false;
             return View();
         }
 
@@ -92,6 +95,7 @@ namespace Bean_Scene_Reservation.Controllers
             }
 
             PopulateViewData(reservation);
+            TempData["isCapture"] = false;
             return View(reservation);
         }
 
@@ -219,6 +223,7 @@ namespace Bean_Scene_Reservation.Controllers
             await _context.SaveChangesAsync();
 
             // Redirect to the Details view (pass through reservation ID)
+            TempData["isStaff"] = false;
             return RedirectToAction(nameof(UpdateStatus), new { id = id });
         }
 
@@ -236,7 +241,7 @@ namespace Bean_Scene_Reservation.Controllers
                 .Include(r => r.EndTime)
                 .Include(r => r.Sitting)
                 .ThenInclude(s => s.SittingType)
-                //.Include(r => r.User)
+                .Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (reservation == null)
@@ -276,7 +281,7 @@ namespace Bean_Scene_Reservation.Controllers
                 .Include(r => r.EndTime)
                 .Include(r => r.Sitting)
                 .ThenInclude(s => s.SittingType)
-                //.Include(r => r.User)
+                .Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (reservation == null)
@@ -284,6 +289,7 @@ namespace Bean_Scene_Reservation.Controllers
                 return NotFound();
             }
 
+            TempData["isStaff"] = false;
             return View(reservation);
         }
 
@@ -356,6 +362,135 @@ namespace Bean_Scene_Reservation.Controllers
                 .Where(r => r.UserId == userId)
                 .OrderByDescending(r => r.Date);
             return View(await applicationDbContext.ToListAsync());
+        }
+
+        // GET: Reservations/CaptureReservation
+        [HttpGet("Reservations/CaptureReservation")]
+        public IActionResult CaptureReservation()
+        {
+            PopulateViewData();
+            TempData["isCapture"] = true;
+            return View(nameof(Create));
+        }
+
+        // POST: Reservations/CaptureReservation
+        [HttpPost("Reservations/CaptureReservation")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CaptureReservation([Bind("Id,Date,SittingTypeId,StartTimeId,EndTimeId,AreaId,NumberOfGuests,FirstName,LastName,Email,Phone,Note,Status,Source,UserId")] Reservation reservation)
+        {
+            CheckReservationErrors(reservation);
+
+            if (ModelState.IsValid)
+            {
+                var openTables = TablesLeftInSitting(reservation);
+                AssignTables(reservation, openTables);
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(reservation);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index), "Home");
+            }
+
+            PopulateViewData(reservation);
+            TempData["isCapture"] = true;
+            return View(nameof(Create), reservation);
+        }
+
+        // GET: Reservations/UpcomingReservations
+        [HttpGet("Reservations/UpcomingReservations")]
+        public async Task<IActionResult> UpcomingReservations()
+        {
+            var applicationDbContext = _context.Reservations
+                .Include(r => r.Area)
+                .Include(r => r.StartTime)
+                .Include(r => r.EndTime)
+                .Include(r => r.Sitting)
+                .ThenInclude(s => s.SittingType)
+                .Include(r => r.User)
+                .OrderByDescending(r => r.Date);
+            TempData["isStaff"] = true;
+            return View(nameof(Index), await applicationDbContext.ToListAsync());
+        }
+
+        // GET: Reservations/UpcomingReservations/Details/5
+        [HttpGet("Reservations/UpcomingReservations/Details/{id}")]
+        public async Task<IActionResult> UpcomingDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var reservation = await _context.Reservations
+                .Include(r => r.Area)
+                .Include(r => r.StartTime)
+                .Include(r => r.EndTime)
+                .Include(r => r.Sitting)
+                .ThenInclude(s => s.SittingType)
+                .Include(s => s.Table)
+                .Include(r => r.User)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            TempData["isStaff"] = true;
+            return View(nameof(Details), reservation);
+        }
+
+        // GET: Reservations/UpcomingReservations/UpdateStatus/5
+        [HttpGet("Reservations/UpcomingReservations/UpdateStatus/{id}")]
+        public async Task<IActionResult> UpcomingUpdateStatus(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var reservation = await _context.Reservations
+                .Include(r => r.Area)
+                .Include(r => r.StartTime)
+                .Include(r => r.EndTime)
+                .Include(r => r.Sitting)
+                .ThenInclude(s => s.SittingType)
+                .Include(r => r.User)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            TempData["isStaff"] = true;
+            return View(nameof(UpdateStatus),reservation);
+        }
+
+        // GET: Reservations/Edit/5/Confirmed
+        [HttpGet("Reservations/UpcomingReservations/Edit/{id}/{status}")]
+        public async Task<IActionResult> EditUpcoming(int id, string status)
+        {
+            // Find a reservation
+            var reservation = await _context.Reservations.FindAsync(id);
+            if (reservation == null)
+                return NotFound("Reservation not found.");
+
+            // Validate status
+            if (!Enum.TryParse(status, out Reservation.ReservationStatus statusEnum))
+                return BadRequest("Invalid status.");
+
+            // Change the status
+            reservation.Status = statusEnum;
+
+            // Update the database
+            _context.Update(reservation);
+            await _context.SaveChangesAsync();
+
+            // Redirect to the Details view (pass through reservation ID)
+            TempData["isStaff"] = true;
+            return RedirectToAction(nameof(UpcomingUpdateStatus), new { id = id });
         }
 
         private bool ReservationExists(int id)

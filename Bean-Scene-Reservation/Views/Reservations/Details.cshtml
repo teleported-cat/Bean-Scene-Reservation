@@ -1,6 +1,7 @@
 ﻿@model Bean_Scene_Reservation.Models.Reservation
 
 @{
+    bool isStaff = (bool)TempData["isStaff"];
     ViewData["Title"] = "Reservation for " + Model.Date + " " + Model.Sitting.SittingType.Name + " Details";
 
     var tableNumbers = Model.Table.Select(t => t.TableNumber).ToList();
@@ -147,7 +148,16 @@
     </dl>
 </div>
 
-<div class="form-group border-top mt-4 pt-4">
-    <a class="btn btn-primary" aria-label="Edit" title="Edit" asp-action="Edit" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" asp-route-type="@Model.SittingTypeId">Edit</a>
-    <a asp-action="Index" class="btn btn-secondary" title="Back" aria-label="Back">Back</a>
-</div>
+@if (!isStaff)
+{
+    <div class="form-group border-top mt-4 pt-4">
+        <a class="btn btn-primary" aria-label="Edit" title="Edit" asp-action="Edit" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" asp-route-type="@Model.SittingTypeId">Edit</a>
+        <a asp-action="Index" class="btn btn-secondary" title="Back" aria-label="Back">Back</a>
+    </div>
+} else
+{
+    <div class="form-group border-top mt-4 pt-4">
+        <a asp-action="UpcomingReservations" class="btn btn-secondary" title="Back" aria-label="Back">Back</a>
+    </div>
+}
+
