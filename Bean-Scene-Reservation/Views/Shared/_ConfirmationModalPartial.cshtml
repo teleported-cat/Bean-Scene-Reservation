@@ -18,7 +18,7 @@
                     <p>We'll contact you a week before your reservation to confirm.</p>
                 @if (isLoggedIn)
                 {
-                    <p>You can always review your reservations in <a href="#">Reservation History.</a></p>
+                    <p>You can always review your reservations in <a asp-controller="Reservations" asp-action="CustomerView">Reservation History.</a></p>
                 } else
                 {
                     <p>Be sure to record these details so you don't forget!</p>

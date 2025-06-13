@@ -1,14 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Bean_Scene_Reservation.Data;
+using Bean_Scene_Reservation.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Bean_Scene_Reservation.Data;
-using Bean_Scene_Reservation.Models;
-using System.Runtime.ExceptionServices;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.ExceptionServices;
+using System.Security.Claims;
+using System.Security.Principal;
+using System.Threading.Tasks;
 
 namespace Bean_Scene_Reservation.Controllers
 {
@@ -330,6 +333,29 @@ namespace Bean_Scene_Reservation.Controllers
 
             PopulateViewData(reservation);
             return View(nameof(CustomerCreate), reservation);
+        }
+
+        // GET: Reservations/ReservationHistory
+        [HttpGet("Reservations/ReservationHistory")]
+        public async Task<IActionResult> CustomerView()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return View();
+            }
+
+            var applicationDbContext = _context.Reservations
+                .Include(r => r.Area)
+                .Include(r => r.StartTime)
+                .Include(r => r.EndTime)
+                .Include(r => r.Sitting)
+                .ThenInclude(s => s.SittingType)
+                .Include(r => r.User)
+                .Where(r => r.UserId == userId)
+                .OrderByDescending(r => r.Date);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         private bool ReservationExists(int id)
