@@ -13,9 +13,15 @@ namespace Bean_Scene_Reservation.Controllers
             _context = context;
         }
 
-        public IActionResult ReservationAnalytics()
+        public async Task<IActionResult> ReservationAnalytics()
         {
-            return View();
+            var applicationDbContext = _context.Reservations
+               .Include(r => r.Table);
+
+            ViewBag.SittingTypes = _context.SittingTypes.OrderBy(st => st.Id).ToList();
+            ViewBag.Areas = _context.Areas.OrderBy(a => a.Id).ToList();
+
+            return View(await applicationDbContext.ToListAsync());
         }
         public async Task<IActionResult> TableUtilisation()
         {

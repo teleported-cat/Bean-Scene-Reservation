@@ -1,5 +1,209 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<Bean_Scene_Reservation.Models.Reservation>
+
 @{
+    ViewData["Title"] = "Reservation Analytics";
+
+    // Non-Cancelled Reservations
+    var validReservations = Model.Where(r => r.Status != Enum.Parse<Reservation.ReservationStatus>("Cancelled"));
+
+    // Cancelled Reservations
+    var canceledReservations = Model.Where(r => r.Status == Enum.Parse<Reservation.ReservationStatus>("Cancelled"));
+
+    // Get areas
+    var areas = ViewBag.Areas;
+
+    // Get sitting types
+    var sittingTypes = ViewBag.SittingTypes;
+
+    // Todays date
+    var today = DateOnly.FromDateTime(DateTime.Today);
+
+    // A list of dates containing today and the 7 days before it
+    var lastWeekDates = new List<DateOnly>();
+    for (int i = 0; i < 8; i++)
+    {
+        lastWeekDates.Insert(0, DateOnly.FromDateTime(DateTime.Today.AddDays(-i)));
+    }
+
+    // A list of dates containing today and the 7 days after
+    var nextWeekDates = new List<DateOnly>();
+    for (int i = 0; i < 8; i++)
+    {
+        nextWeekDates.Add(DateOnly.FromDateTime(DateTime.Today.AddDays(i)));
+    }
+
+    // Reservations last week should be an integer list that counts for the last 
+    // var countsLastWeek = Model
+    // .Where(r => r.Date <= today && r.Date >= lastWeekDates[0])
+    // .GroupBy(r => r.Date)
+    // .OrderBy(g => g.Key)
+    // .Select(g => g.Count())
+    // .ToList();
+
+    var lastDict = validReservations
+    .GroupBy(r => r.Date)
+    .ToDictionary(g => g.Key, g => g.Count());
+
+    // If you need all dates in range (including zero counts)
+    var countsLastWeek = new List<int>();
+    for (DateOnly date = lastWeekDates[0]; date <= today; date = date.AddDays(1))
+    {
+        countsLastWeek.Add(lastDict.ContainsKey(date) ? lastDict[date] : 0);
+    }
+
+    // Reservations next week should be an integer list that counts for the last
+    // var countsNextWeek = Model
+    // .Where(r => r.Date <= today && r.Date >= lastWeekDates[0])
+    // .GroupBy(r => r.Date)
+    // .OrderBy(g => g.Key)
+    // .Select(g => g.Count())
+    // .ToList();
+
+    var nextDict = validReservations
+    .GroupBy(r => r.Date)
+    .ToDictionary(g => g.Key, g => g.Count());
+
+    // If you need all dates in range (including zero counts)
+    var countsNextWeek = new List<int>();
+    for (DateOnly date = today; date <= nextWeekDates.Last(); date = date.AddDays(1))
+    {
+        countsNextWeek.Add(nextDict.ContainsKey(date) ? nextDict[date] : 0);
+    }
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row gap-1 mt-3">
+    <div class="card col-12 col-lg">
+        <div class="card-body">
+            <h4 class="card-title">Reservation Graphs</h4>
+            <hr />
+            @* Reservations last week *@
+            <div class="mb-3">
+                <h5 class="card-title">No. Reservations Last Week</h5>
+                <canvas id="lastWeekChart"></canvas>
+            </div>
+            <hr />
+            @* Reservations next week *@
+            <div class="mb-3">
+                <h5 class="card-title">No. Reservations Next Week</h5>
+                <canvas id="nextWeekChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="card col-12 col-lg">
+        <div class="card-body">
+            <h4 class="card-title">Reservation Statistics</h4>
+            <hr />
+            @* Number of Future Sittings *@
+            @* Last Sitting Added *@
+            <div>
+                <dl class="row">
+                    <dt class="col-sm-4">
+                        Reservations Today
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.Where(r => r.Date == today).Count()
+                    </dd>
+                    <dt class="col-sm-4">
+                        Future Reservations
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.Where(r => r.Date >= today).Count()
+                    </dd>
+                    <dt class="col-sm-4">
+                        Total Reservations
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.Count()
+                    </dd>
+                    <dt class="col-sm-4">
+                        Pending
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.Where(r => r.Status == Enum.Parse<Reservation.ReservationStatus>("Pending")).Count()
+                    </dd>
+                    <dt class="col-sm-4">
+                        Confirmed
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.Where(r => r.Status == Enum.Parse<Reservation.ReservationStatus>("Confirmed")).Count()
+                    </dd>
+                    <dt class="col-sm-4">
+                        In-Progress
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.Where(r => r.Status == Enum.Parse<Reservation.ReservationStatus>("InProgress")).Count()
+                    </dd>
+                    <dt class="col-sm-4">
+                        Completed
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.Where(r => r.Status == Enum.Parse<Reservation.ReservationStatus>("Completed")).Count()
+                    </dd>
+                    <dt class="col-sm-4">
+                        Cancelled
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.Where(r => r.Status == Enum.Parse<Reservation.ReservationStatus>("Cancelled")).Count()
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ChartJsPartial" />
+    <script>
+        // Last Week Chart
+        let lastWeekDates = @Html.Raw(Json.Serialize(lastWeekDates));
+        let lastWeekNum = @Html.Raw(Json.Serialize(countsLastWeek));
+        const lastWeekChart = document.getElementById('lastWeekChart');
+
+        new Chart(lastWeekChart, {
+          type: 'bar',
+          data: {
+            labels: lastWeekDates,
+            datasets: [{
+              label: '# of Reservations',
+              data: lastWeekNum,
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+
+        // Next Week Chart
+        let nextWeekDates = @Html.Raw(Json.Serialize(nextWeekDates));
+        let nextWeekNum = @Html.Raw(Json.Serialize(countsNextWeek));
+        const nextWeekChart = document.getElementById('nextWeekChart');
+
+        new Chart(nextWeekChart, {
+          type: 'bar',
+          data: {
+            labels: nextWeekDates,
+            datasets: [{
+              label: '# of Reservations',
+              data: nextWeekNum,
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+
+    </script>
 }
