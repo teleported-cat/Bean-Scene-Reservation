@@ -1,0 +1,66 @@
+﻿@model Bean_Scene_Reservation.Controllers.UsersController.EditUserDto
+
+@{
+    ViewData["Title"] = "Edit " + Model.FirstName + " " + Model.LastName;
+}
+
+<h1 class="open-sans">@ViewData["Title"]</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Id" hidden />
+            <div class="form-group">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="form-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="form-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone" class="form-label"></label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group border-top border-bottom">
+                <label asp-for="NewPassword" class="form-label"></label>
+                <input asp-for="NewPassword" class="form-control" />
+                <span asp-validation-for="NewPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label class="form-label">Roles</label>
+                @if (Model.AvailableRoles.Any())
+                {
+                    @for (int i = 0; i < Model.AvailableRoles.Count; i++)
+                    {
+                        <div class="form-check">
+                            <input type="checkbox"
+                                   name="SelectedRoles"
+                                   value="@Model.AvailableRoles[i]"
+                                   class="form-check-input"
+                                   id="role_@i"
+                                   @(Model.SelectedRoles.Contains(Model.AvailableRoles[i]) ? "checked" : "") />
+                            <label class="form-check-label" for="role_@i">
+                                @Model.AvailableRoles[i]
+                            </label>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="form-group border-top mt-4 pt-4">
+                <input type="submit" value="Edit" class="btn btn-primary" aria-label=Edit" />
+                <a asp-action="Index" class="btn btn-secondary" aria-label="Cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

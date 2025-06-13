@@ -3,8 +3,10 @@ using Bean_Scene_Reservation.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Security;
 
 namespace Bean_Scene_Reservation.Controllers
 {
@@ -46,7 +48,7 @@ namespace Bean_Scene_Reservation.Controllers
         [HttpGet("Users/Details/{id}")]
         public async Task<IActionResult> Details (string? id)
         {
-            if (id == null) {
+            if (string.IsNullOrEmpty(id)) {
                 return NotFound();
             }
 
@@ -147,13 +149,129 @@ namespace Bean_Scene_Reservation.Controllers
         }
 
         // GET: Users/Edit/1ac0095d-c987-4dfc-a387-0ad330077fe1
+        public async Task<IActionResult> Edit(string? id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            var allRoles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
+
+            var userWithRoles = new EditUserDto
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Phone = user.PhoneNumber,
+                SelectedRoles = roles.ToList(),
+                AvailableRoles = allRoles,
+                NewPassword = null
+            };
+
+            return View(userWithRoles);
+        }
 
         // POST: Users/Edit/1ac0095d-c987-4dfc-a387-0ad330077fe1
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(string id, EditUserDto updatedUser)
+        {
+            if (id != updatedUser.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid) {
+                var user = await _userManager.FindByIdAsync(id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                // Update user properties
+                user.UserName = updatedUser.Email;
+                user.Email = updatedUser.Email;
+                user.PhoneNumber = updatedUser.Phone;
+                user.FirstName = updatedUser.FirstName;
+                user.LastName = updatedUser.LastName;
+
+                // Normalised fields
+                user.NormalizedUserName = updatedUser.Email.ToUpperInvariant();
+                user.NormalizedEmail = updatedUser.Email.ToUpperInvariant();
+
+                user.SecurityStamp = Guid.NewGuid().ToString(); // Generate security stamp (a random value that should change whenever a user's information is updated)
+
+                var updateResult = await _userManager.UpdateAsync(user);
+                if (!updateResult.Succeeded)
+                {
+                    foreach (var error in updateResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+
+                    // Reload roles for redisplay
+                    updatedUser.AvailableRoles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
+                    return View(updatedUser);
+                }
+
+                // Update password if provided
+                if (!string.IsNullOrEmpty(updatedUser.NewPassword))
+                {
+                    var removePasswordResult = await _userManager.RemovePasswordAsync(user);
+                    if (removePasswordResult.Succeeded)
+                    {
+                        var addPasswordResult = await _userManager.AddPasswordAsync(user, updatedUser.NewPassword);
+                        if (!addPasswordResult.Succeeded)
+                        {
+                            foreach (var error in addPasswordResult.Errors)
+                            {
+                                ModelState.AddModelError(string.Empty, error.Description);
+                            }
+
+                            updatedUser.AvailableRoles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
+                            return View(updatedUser);
+                        }
+                    }
+                }
+
+                // Update roles
+                var currentRoles = await _userManager.GetRolesAsync(user);
+                var rolesToRemove = currentRoles.Except(updatedUser.SelectedRoles ?? new List<string>()).ToList();
+                var rolesToAdd = (updatedUser.SelectedRoles ?? new List<string>()).Except(currentRoles).ToList();
+
+                if (rolesToRemove.Any())
+                {
+                    await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
+                }
+
+                if (rolesToAdd.Any())
+                {
+                    await _userManager.AddToRolesAsync(user, rolesToAdd);
+                }
+
+                //TempData["Success"] = "User updated successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // If we got this far, something failed, redisplay form
+            updatedUser.AvailableRoles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
+            return View(updatedUser);
+        }
 
         // GET: Users/Delete/1ac0095d-c987-4dfc-a387-0ad330077fe1
         public async Task<IActionResult> Delete(string? id)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(id))
             {
                 return NotFound();
             }
@@ -227,6 +345,35 @@ namespace Bean_Scene_Reservation.Controllers
             [DataType(DataType.Password)]
             [DisplayName("Password")]
             public string Password { get; set; }
+
+            [DisplayName("First Name")]
+            public string FirstName { get; set; }
+
+            [DisplayName("Last Name")]
+            public string LastName { get; set; }
+
+            [Required]
+            [EmailAddress]
+            [DisplayName("Email")]
+            public string Email { get; set; }
+
+            [Phone]
+            public string? Phone { get; set; }
+
+            [DisplayName("Roles")]
+            public List<string> SelectedRoles { get; set; }
+
+            public List<string> AvailableRoles { get; set; } = new List<string>();
+        }
+        public class EditUserDto
+        {
+            [Required]
+            public string Id { get; set; }
+
+            [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 and at max 100 characters long.")]
+            [DataType(DataType.Password)]
+            [DisplayName("Password (Leave blank to keep current)")]
+            public string? NewPassword { get; set; } = null;
 
             [DisplayName("First Name")]
             public string FirstName { get; set; }
