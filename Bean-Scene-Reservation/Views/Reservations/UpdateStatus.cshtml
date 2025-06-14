@@ -8,10 +8,10 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<p>Click on a status to update the reservation.</p>
+<p>Drag the arrow into another box to update the status.</p>
 
 @* Status buttons *@
-<div class="status-buttons mt-2 mb-4">
+@* <div class="status-buttons mt-2 mb-4">
     @foreach (var status in Enum.GetValues<Reservation.ReservationStatus>())
     {
         string cssActive = Model.Status == status ? "active" : "";
@@ -20,6 +20,32 @@
            title="Set status to @status">
             @status
         </a>
+    }
+</div> *@
+
+@* Dragula Tray *@
+@* 
+    The idea is that there is an arrow in a box in an array where each box represents a status.
+    The arrow starts in the box of the current status, and when it is moved into another box,
+    it sends the asp-action to set it to that status.
+    The page should reload with the new status.
+*@
+<div class="row mt-2 mb-4 gap-2 ms-5 me-5 ms-md-0 me-md-0">
+    @foreach (var status in Enum.GetValues<Reservation.ReservationStatus>())
+    {
+        <div class="card col-12 col-md">
+            <div class="card-body">
+                <h5 class="card-title text-center color-@status">@status</h5>
+                <div id="@status" class="border drop-box">
+                    @if (Model.Status == status)
+                    {
+                        <div class="drop-item">
+                            <i class="bi bi-caret-up"></i>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
     }
 </div>
 
@@ -56,4 +82,43 @@
     <div class="border-top mt-4 pt-4">
         <a asp-action="UpcomingReservations" class="btn btn-secondary" aria-label="Back">Back</a>
     </div>
+}
+
+@section Scripts {
+    <partial name="_DragulaPartial" />
+    <script>
+        function sendUpdateRequest(newStatus) {
+            let action = '@(isStaff ? $"/Reservations/UpcomingReservations/Edit/{Model.Id}/" : $"/Reservations/Edit/{Model.Id}/")' + newStatus;
+            
+            fetch(action, {
+                method: 'GET'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                //return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+                // Handle the response data
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        let containers = [
+            document.querySelector('#Pending'), 
+            document.querySelector('#Confirmed'), 
+            document.querySelector('#InProgress'), 
+            document.querySelector('#Completed'), 
+            document.querySelector('#Cancelled')
+        ];
+
+        dragula(containers).on('drop', function(el, target) {
+            const status = target.id;
+            sendUpdateRequest(status);
+        });
+    </script>
 }

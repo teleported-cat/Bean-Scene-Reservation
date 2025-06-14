@@ -227,3 +227,34 @@ a {
     background-color: var(--color);
     color: white !important;
 }
+
+.drop-box {
+    aspect-ratio: 1 / 1;
+}
+
+.drop-item {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 64px;
+}
+
+.color-Pending {
+    color: #ff9900;
+}
+
+.color-Confirmed {
+    color: #228855;
+}
+
+.color-InProgress {
+    color: #1166ff;
+}
+
+.color-Completed {
+    color: #667777;
+}
+
+.color-Cancelled {
+    color: #dd3344;
+}
