@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Bean_Scene_Reservation.Models.Area">
+    <Position X="12.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAQAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Area.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Tables" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Bean_Scene_Reservation.Models.Reservation">
+    <Position X="4.5" Y="0.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="Bean_Scene_Reservation.Models.Reservation.ReservationStatus">
+        <TypeIdentifier>
+          <NewMemberFileName>Models\Reservation.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Bean_Scene_Reservation.Models.Reservation.ReservationSource">
+        <TypeIdentifier>
+          <NewMemberFileName>Models\Reservation.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAADAEAEAiAAAIAAAAEAQAgAIAAgAAABIAAAIQEIAEg=</HashCode>
+      <FileName>Models\Reservation.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Area" />
+      <Property Name="Sitting" />
+      <Property Name="User" />
+      <Property Name="StartTime" />
+      <Property Name="EndTime" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Table" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Bean_Scene_Reservation.Models.Sitting">
+    <Position X="8" Y="0.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="Bean_Scene_Reservation.Models.Sitting.SittingStatus">
+        <TypeIdentifier>
+          <NewMemberFileName>Models\Sitting.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAEAAgAEAAAAAAAAAAEAAAACIAAgAAABAAAAAAEoAAA=</HashCode>
+      <FileName>Models\Sitting.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="SittingType" />
+      <Property Name="SittingSchedule" />
+      <Property Name="EndTime" />
+      <Property Name="StartTime" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Bean_Scene_Reservation.Models.SittingSchedule">
+    <Position X="17.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAASQgAAABAACAAABAEAEAQiIAAgAAAAACAAAEEMAAA=</HashCode>
+      <FileName>Models\SittingSchedule.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="EndTime" />
+      <Property Name="StartTime" />
+      <Property Name="SittingType" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Sittings" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Bean_Scene_Reservation.Models.SittingType">
+    <Position X="11.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\SittingType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bean_Scene_Reservation.Models.Table">
+    <Position X="8.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgEAAAAAAAAAAAAAAAIAAAAQAAAAA=</HashCode>
+      <FileName>Models\Table.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Area" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Reservations" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Bean_Scene_Reservation.Models.Timeslot">
+    <Position X="14.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Models\Timeslot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bean_Scene_Reservation.Models.ApplicationUser">
+    <Position X="2" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Models\ApplicationUser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.AspNetCore.Identity.IdentityUser">
+    <Position X="2.75" Y="6" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Microsoft.AspNetCore.Identity.IdentityUser&lt;TKey&gt;">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
