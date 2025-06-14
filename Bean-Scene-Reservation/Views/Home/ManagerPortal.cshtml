@@ -4,7 +4,6 @@
 
 <h1 class="open-sans">@ViewData["Title"]</h1>
 
-@* TODO: Update the manager portal page to use a responsive grid layout with cards *@
 <hr />
 <h2>Manage Database</h2>
 
@@ -38,5 +37,14 @@
     </li>
     <li>
         <a asp-controller="Reports" asp-action="TableUtilisation">Current Table Utilisation</a>
+    </li>
+</ul>
+
+<hr />
+<h2>Manager Help/Instructions</h2>
+
+<ul>
+    <li>
+        <a asp-controller="Home" asp-action="ManagerHelp">Manager Help</a>
     </li>
 </ul>

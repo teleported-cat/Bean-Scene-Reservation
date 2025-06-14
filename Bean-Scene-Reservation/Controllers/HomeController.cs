@@ -30,6 +30,12 @@ namespace Bean_Scene_Reservation.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Manager")]
+        public IActionResult ManagerHelp()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
