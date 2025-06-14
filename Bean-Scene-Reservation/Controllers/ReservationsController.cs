@@ -141,8 +141,9 @@ namespace Bean_Scene_Reservation.Controllers
             
             if (ModelState.IsValid)
             {
+                //var reservations = _context.Reservations;
                 //var oldReservation = reservations.Where(r => r.Id == reservation.Id).First();
-                //var oldTables = oldReservation.Table;
+                //var oldAreaName = oldReservation.Area.Name;
                 //oldTables.Clear();
 
                 //var openTables = TablesLeftInSittingEdit(reservation);
@@ -689,13 +690,6 @@ namespace Bean_Scene_Reservation.Controllers
             {
                 reservation.Table.Add(openTables[i]);
             }
-        }
-        private void ClearOldTables(Reservation reservation)
-        {
-            // See if there is any tables associated with the old reservation
-            var oldTables = _context.Reservations.Where(r => r.Id == reservation.Id).First().Table;
-            // Delete them
-            oldTables.Clear();
         }
         #endregion
     }
