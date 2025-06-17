@@ -344,7 +344,7 @@ namespace Bean_Scene_Reservation.Controllers
                 var area = await _context.Areas.Where(a => a.Id == reservation.AreaId).FirstAsync();
                 string areaName = area.Name;
 
-                TempData["SuccessMessage"] = $"Your {sittingName} booking on {reservation.Date} has been placed.";
+                TempData["SuccessMessage"] = $"Your {sittingName} booking on {reservation.Date} has been placed. Your reservation no. is {reservation.Id}";
                 TempData["SuccessDetails"] = $"Your reservation will be from {reservation.StartTimeId} to {reservation.EndTimeId}, in the {areaName} area.";
 
                 return RedirectToAction(nameof(Index), "Home");
