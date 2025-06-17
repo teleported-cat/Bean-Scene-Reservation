@@ -82,12 +82,12 @@ a {
     background-color: var(--DarkBlue);
 }
 
-.header-title a img {
+.header-title span img {
     width: 300px;
 }
 
 @media not (min-width: 300px) {
-    .header-title a img {
+    .header-title span img {
         width: 100%;
     }
 }
