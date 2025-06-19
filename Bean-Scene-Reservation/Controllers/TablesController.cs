@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Bean_Scene_Reservation.Controllers
@@ -65,6 +66,20 @@ namespace Bean_Scene_Reservation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TableNumber,AreaId")] Table table)
         {
+            var area = await _context.Areas.FindAsync(table.AreaId);
+
+            if (area == null) {
+                return NotFound();
+            }
+
+
+            string pattern = @"^[A-Z]\d{1,2}$";
+            var regexMatch = Regex.Match(table.TableNumber, pattern);
+
+            if (!regexMatch.Success) {
+                ModelState.AddModelError("TableNumber", "Table number does not follow the pattern.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(table);
