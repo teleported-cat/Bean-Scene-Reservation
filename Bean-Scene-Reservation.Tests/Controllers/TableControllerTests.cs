@@ -115,5 +115,25 @@ namespace Bean_Scene_Reservation.Tests.Controllers {
         }
         #endregion
 
+        #region Delete
+        [Fact]
+        public async void TablesController_Delete_Success_ReturnsRedirect() {
+            // Arrange
+            var controller = new TablesController(_context);
+            const string TABLE_NUMBER = "M1";
+
+            // Act 
+            var result = await controller.DeleteConfirmed(TABLE_NUMBER);
+
+            // Assert
+            // Should be redirected to the index page of the Table controller
+            // (controllerName = null, controllerAction = "Index")
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Null(redirectToActionResult.ControllerName);
+            Assert.Equal("Index", redirectToActionResult.ActionName);
+
+        }
+        #endregion
+
     }
 }
