@@ -40,6 +40,11 @@ namespace Bean_Scene_Reservation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Area area)
         {
+            if (area.Name.Length > 30 || area.Name.Length < 2)
+            {
+                ModelState.AddModelError("Name", "Must be between 2-30 characters!");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(area);
@@ -75,6 +80,11 @@ namespace Bean_Scene_Reservation.Controllers
             if (id != area.Id)
             {
                 return NotFound();
+            }
+
+            if (area.Name.Length > 30 || area.Name.Length < 2)
+            {
+                ModelState.AddModelError("Name", "Must be between 2-30 characters!");
             }
 
             if (ModelState.IsValid)
