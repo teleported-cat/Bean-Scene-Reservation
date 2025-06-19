@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178 d17.12
+VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bean-Scene-Reservation", "Bean-Scene-Reservation\Bean-Scene-Reservation.csproj", "{873A771A-1488-427B-A0BD-3CDBCE6D3E48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bean-Scene-Reservation.Tests", "Bean-Scene-Reservation.Test\Bean-Scene-Reservation.Tests.csproj", "{3E0AFDB5-6A4A-4981-A9D0-E2D1CB80AD0B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{873A771A-1488-427B-A0BD-3CDBCE6D3E48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{873A771A-1488-427B-A0BD-3CDBCE6D3E48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{873A771A-1488-427B-A0BD-3CDBCE6D3E48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E0AFDB5-6A4A-4981-A9D0-E2D1CB80AD0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E0AFDB5-6A4A-4981-A9D0-E2D1CB80AD0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E0AFDB5-6A4A-4981-A9D0-E2D1CB80AD0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E0AFDB5-6A4A-4981-A9D0-E2D1CB80AD0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5947CD34-E425-40FB-AAD2-FD5AB7705335}
 	EndGlobalSection
 EndGlobal
