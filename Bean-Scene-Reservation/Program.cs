@@ -52,6 +52,9 @@ namespace Bean_Scene_Reservation
             // Build the app
             var app = builder.Build();
 
+            // Use request localization
+            app.UseRequestLocalization();
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
